@@ -261,10 +261,21 @@ def inject_theme():
         /* ── Chart section title ── */
         .section-title { font-size: 12px !important; }
 
-        /* ── Segmented control ── */
+        /* ── Segmented control: wrap to 2 rows on mobile ── */
+        div[data-testid="stSegmentedControl"] {
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+        }
         div[data-testid="stSegmentedControl"] button {
             font-size: 10px !important;
-            padding: 5px 8px !important;
+            padding: 5px 10px !important;
+            flex: 1 1 40% !important; /* 2 buttons per row */
+        }
+
+        /* ── Fix alignment: compensate for sidebar arrow >> ── */
+        .stAppViewBlockContainer {
+            padding-left: 1rem !important;
+            padding-right: 1rem !important;
         }
 
         /* ── Tables ── */
