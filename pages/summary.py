@@ -26,12 +26,17 @@ def _build_card(title, plan_lbl, plan_val, act_lbl, act_val, unit, ach, color):
     ach_display = min(ach, 100) if getattr(ach, 'real', None) is not None else 0
     
     if ach is not None:
+        # Choose font size depending on digit count
+        pct_font = "11px" if ach >= 100 else "13px"
         ring_html = f'''
-<div style="position:relative;width:38px;height:38px;">
-<svg viewBox="0 0 36 36" style="width:38px;height:38px;transform:rotate(-90deg);">
+<div style="position:relative;width:70px;height:70px;">
+<svg viewBox="0 0 36 36" style="width:70px;height:70px;transform:rotate(-90deg);">
 <path style="fill:none;stroke:#f1f5f9;stroke-width:3.5;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
 <path style="fill:none;stroke:{color};stroke-width:3.5;stroke-dasharray:{ach_display},100;stroke-linecap:round;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
 </svg>
+<div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:{pct_font};font-weight:800;color:{color};">
+{fmt(ach, 1)}%
+</div>
 </div>
 '''
         right_html = f'''
