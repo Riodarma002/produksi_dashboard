@@ -28,30 +28,19 @@ def _build_card(title, plan_lbl, plan_val, act_lbl, act_val, unit, ach, color):
     if ach is not None:
         ring_html = f'''
 <div style="position:relative;width:38px;height:38px;">
-<svg viewBox="0 0 36 36" style="width:38px;height:38px;">
+<svg viewBox="0 0 36 36" style="width:38px;height:38px;transform:rotate(-90deg);">
 <path style="fill:none;stroke:#f1f5f9;stroke-width:3.5;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
 <path style="fill:none;stroke:{color};stroke-width:3.5;stroke-dasharray:{ach_display},100;stroke-linecap:round;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
 </svg>
-<div style="position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#0f172a;">
-{fmt(ach, 1)}%
-</div>
-</div>
-<div style="background:{color};color:#fff;border-radius:10px;font-size:9px;font-weight:600;padding:2px 8px;margin-top:6px;min-width:44px;text-align:center;">
-{fmt(ach, 1)}%
 </div>
 '''
         right_html = f'''
-<div style="display:flex;flex-direction:column;align-items:flex-end;">
-<div style="background:{color}1A;color:{color};font-size:8px;font-weight:700;padding:3px 8px;border-radius:10px;margin-bottom:6px;">{title}</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;justify-content:center;">
 {ring_html}
 </div>
 '''
     else:
-        right_html = f'''
-<div style="display:flex;flex-direction:column;align-items:flex-end;">
-<div style="background:{color}1A;color:{color};font-size:8px;font-weight:700;padding:3px 8px;border-radius:10px;">{title}</div>
-</div>
-'''
+        right_html = ''
 
     if plan_val != "":
         left_body = f'''
