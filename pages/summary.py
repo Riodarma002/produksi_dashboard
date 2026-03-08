@@ -138,7 +138,7 @@ def run():
         html_cols += col_html
 
     grid_html = f'''
-<div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:14px;margin-bottom:8px;">
+<div class="summary-jo-grid" style="display:grid;grid-template-columns:repeat(4, 1fr);gap:14px;margin-bottom:8px;">
 {html_cols}
 </div>
 '''

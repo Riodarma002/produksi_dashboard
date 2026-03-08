@@ -190,22 +190,20 @@ def inject_theme():
     /* ══════════════════════════════════════════════════
        MOBILE RESPONSIVE  (≤ 768px)
        ══════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+       MOBILE RESPONSIVE  (≤ 768px)
+       ══════════════════════════════════════════════════ */
     @media (max-width: 768px) {
         .stMainBlockContainer {
             padding-top: 0.25rem !important;
-            padding-left: 0.75rem !important;
-            padding-right: 0.75rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
         }
 
         /* Tighter gaps for stacked columns */
-        div[data-testid="stVerticalBlock"] {
-            gap: 0.5rem !important;
-        }
-        div[data-testid="stHorizontalBlock"] {
-            gap: 0.4rem !important;
-        }
+        div[data-testid="stVerticalBlock"] { gap: 0.5rem !important; }
 
-        /* Force columns to full width when stacked */
+        /* Force Streamlit columns to stack vertically */
         div[data-testid="stHorizontalBlock"] {
             flex-direction: column !important;
             gap: 0.5rem !important;
@@ -216,37 +214,69 @@ def inject_theme():
             min-width: 100% !important;
         }
 
-        /* Header */
+        /* ── Sidebar: collapse on mobile ── */
+        section[data-testid="stSidebar"] {
+            width: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+        }
+
+        /* ── Header ── */
         .header-row {
             flex-direction: column;
             align-items: flex-start;
             gap: 2px;
         }
-        .page-title   { font-size: 16px !important; }
-        .page-subtitle { font-size: 10px !important; margin-bottom: 4px !important; }
-        .clock-badge  { font-size: 9px !important; padding: 2px 6px !important; }
+        .page-title    { font-size: 14px !important; }
+        .page-subtitle { font-size: 9px  !important; margin-bottom: 4px !important; }
+        .clock-badge   { font-size: 8px  !important; padding: 2px 6px !important; }
 
-        /* KPI cards */
-        .kpi-value { font-size: 20px !important; }
-        .kpi-title { font-size: 10px !important; }
-        .kpi-badge { font-size: 8px  !important; padding: 1px 5px !important; }
+        /* ── KPI cards ── */
+        .kpi-value { font-size: 18px !important; }
+        .kpi-title { font-size: 9px  !important; }
+        .kpi-badge { font-size: 7px  !important; padding: 1px 4px !important; }
 
-        /* Stock cards */
-        .stock-val   { font-size: 16px !important; }
-        .stock-label { font-size: 9px  !important; }
-        .stock-icon  { font-size: 13px !important; width: 26px !important; height: 26px !important; min-width: 26px !important; }
+        /* ── Stock cards ── */
+        .stock-val   { font-size: 15px !important; }
+        .stock-label { font-size: 8px  !important; }
+        .stock-icon  { font-size: 12px !important; width: 24px !important; height: 24px !important; min-width: 24px !important; }
 
-        /* Charts */
+        /* ── Production cards: 4-col → 2-col grid ── */
+        .prod-cards-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+        }
+        .prod-card { padding: 10px !important; }
+        .prod-actual-value { font-size: 18px !important; }
+        .prod-name { font-size: 10px !important; }
+
+        /* ── Summary JO columns: stack to 1-col ── */
+        .summary-jo-grid {
+            grid-template-columns: 1fr !important;
+            gap: 12px !important;
+        }
+
+        /* ── Plotly charts: reduce height ── */
         .stPlotlyChart {
             border-radius: 10px !important;
             padding: 4px !important;
         }
-
-        /* Segmented control smaller */
-        div[data-testid="stSegmentedControl"] button {
-            font-size: 11px !important;
-            padding: 6px 10px !important;
+        .stPlotlyChart iframe {
+            max-height: 280px !important;
         }
+
+        /* ── Chart section title ── */
+        .section-title { font-size: 12px !important; }
+
+        /* ── Segmented control ── */
+        div[data-testid="stSegmentedControl"] button {
+            font-size: 10px !important;
+            padding: 5px 8px !important;
+        }
+
+        /* ── Tables ── */
+        .stDataFrame { font-size: 10px !important; }
     }
+
     </style>
     """, unsafe_allow_html=True)

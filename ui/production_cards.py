@@ -58,7 +58,7 @@ def render_production_cards(data: dict):
             <span class="material-icons-outlined" style="font-size:16px;">download</span>
         </div>
     </div>
-    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
+    <div class="prod-cards-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;">
         {cards_html}
     </div>
     """
