@@ -1,0 +1,229 @@
+
+================================================================================
+FILE: db_hourly
+================================================================================
+
+--- Sheet: prod ob | Shape: (3343, 14) ---
+Columns: ['Date', 'Shift', 'Loader', 'Hauler', 'Hour', 'Trip', 'Volume', 'Distance', 'PIT', 'Owner', 'Material', 'Sub Material', 'Hour Fix1', 'Hour LU']
+
+                  Date Shift   Loader   Hauler     Hour  Trip  Volume  Distance          PIT Owner    Material Sub Material Hour Fix1 Hour LU
+0  2026-02-16 00:00:00   Day  EXK3003  HDK5018  06 - 07     1    42.0      4300  North JO IC   BDE  OB Freedig         Clay  06:00:00      06
+1  2026-02-16 00:00:00   Day  EXK3003  HDK5020  06 - 07     1    42.0      4300  North JO IC   BDE  OB Freedig         Clay  06:00:00      06
+2  2026-02-16 00:00:00   Day  EXK3003  HDK5021  06 - 07     1    42.0      4300  North JO IC   BDE  OB Freedig         Clay  06:00:00      06
+3  2026-02-16 00:00:00   Day  EXK3003  HDK5022  06 - 07     1    42.0      4300  North JO IC   BDE  OB Freedig         Clay  06:00:00      06
+4  2026-02-16 00:00:00   Day  EXK3003  HDK5023  06 - 07     1    42.0      4300  North JO IC   BDE  OB Freedig         Clay  06:00:00      06
+
+
+--- Sheet: lt ob | Shape: (810, 12) ---
+Columns: ['Date', 'Shift', 'Eqnum', 'Desc.', 'Start', 'Stop', 'PIT', 'Owner', 'Desc.Lama', 'Durasi', 'Hour Fix2', 'Hour LU']
+
+        Date Shift    Eqnum               Desc.     Start      Stop           PIT Owner           Desc.Lama    Durasi Hour Fix2 Hour LU
+0 2026-02-16   Day  EXK3003        Change Shift  06:30:00  06:37:00  North JO GAM   BDE        SHIFT CHANGE  0.116667  06:00:00      06
+1 2026-02-16   Day  EXK3003  Loading Overburden  06:37:00  07:00:00  North JO GAM   BDE  LOADING OVERBURDEN  0.383333  06:00:00      06
+2 2026-02-16   Day  EXK3004        Change Shift  06:30:00  06:32:00   North JO IC   BDE        SHIFT CHANGE  0.033333  06:00:00      06
+3 2026-02-16   Day  EXK3004  Loading Overburden  06:32:00  07:00:00   North JO IC   BDE  LOADING OVERBURDEN  0.466667  06:00:00      06
+4 2026-02-16   Day  EXH3008        Change Shift  06:30:00  06:35:00   North JO IC   BDE        SHIFT CHANGE  0.083333  06:00:00      06
+
+
+--- Sheet: pp ob | Shape: (233, 9) ---
+Columns: ['Date', 'Shift', 'Hour', 'Eqnum', "Problem Prod'ty", 'PIT', 'Owner', 'Hour Fix1', 'Hour LU']
+
+                  Date  Shift     Hour    Eqnum          Problem Prod'ty          PIT Owner Hour Fix1 Hour LU
+0  2026-02-16 00:00:00  Night  19 - 20  EXK3004            Jalan Berdebu  North JO IC   BDE  19:00:00      19
+1  2026-02-16 00:00:00  Night  19 - 20  EXK3004  Not matching_Opr Sholat  North JO IC   BDE  19:00:00      19
+2  2026-02-16 00:00:00  Night  19 - 20  EXH3012             Double Bench  North JO IC   BDE  19:00:00      19
+3  2026-02-16 00:00:00  Night  19 - 20  EXH3012            Jalan Berdebu  North JO IC   BDE  19:00:00      19
+4  2026-02-16 00:00:00  Night  19 - 20  EXH3013            Jalan Berdebu  North JO IC   BDE  19:00:00      19
+
+
+--- Sheet: prod ch | Shape: (1050, 23) ---
+Columns: ['Date', 'Trans ID', 'Eqnum', 'Type', 'Egi', 'Owner', 'Driver', 'PIT', 'Loader', 'Seam', 'Product', 'Shift', 'Tgl Masuk', 'Jam Masuk', 'Jam Keluar', 'Gross', 'Tare', 'Netto', 'Dumping', 'Date Closing', 'Hour Fix2', 'PIT Fix', 'Hour LU']
+
+        Date  Trans ID    Eqnum   Type      Egi Owner Driver             PIT     Loader Seam Product Shift            Tgl Masuk Jam Masuk Jam Keluar  Gross   Tare  Netto   Dumping Date Closing Hour Fix2      PIT Fix Hour LU
+0 2026-02-16         0  GHT 746   SANY  SANY-48   MGE      0  PIT JO SELATAN  EX SMP 73   35      LS   Day  2026-02-16 00:00:00  07:54:00   08:00:00  65260  24040  41220  HOPPER C   2026-02-16  08:00:00  South JO IC      08
+1 2026-02-16         0  GHT 722  VOLVO      440   MGE      0  PIT JO SELATAN  EX SMP 41   36      LS   Day  2026-02-16 00:00:00  07:57:00   08:03:00  58640  20060  38580  HOPPER C   2026-02-16  08:00:00  South JO IC      08
+2 2026-02-16         0  GHT 749   SANY  SANY-48   MGE      0  PIT JO SELATAN  EX SMP 41   36      LS   Day  2026-02-16 00:00:00  08:01:00   08:07:00  63640  24040  39600  HOPPER C   2026-02-16  08:00:00  South JO IC      08
+3 2026-02-16         0  GHT 730  VOLVO      440   MGE      0  PIT JO SELATAN  EX SMP 41   36      LS   Day  2026-02-16 00:00:00  08:02:00   08:09:00  57160  20060  37100  HOPPER C   2026-02-16  08:00:00  South JO IC      08
+4 2026-02-16         0  GHT 725  VOLVO      440   MGE      0  PIT JO SELATAN  EX SMP 73   35      LS   Day  2026-02-16 00:00:00  08:04:00   08:13:00  57560  20060  37500  HOPPER C   2026-02-16  08:00:00  South JO IC      08
+
+
+--- Sheet: prod ct | Shape: (203, 14) ---
+Columns: ['Date', 'Shift', 'Eqnum', 'PIT', 'Source', 'Jam Masuk', 'Retase', 'Loader', 'Pengalih', 'Production', 'User', 'Seam', 'Hour Fix1', 'Hour LU']
+
+        Date Shift    Eqnum    PIT       Source Jam Masuk  Retase      Loader  Pengalih  Production User   Seam Hour Fix1 Hour LU
+0 2026-02-16   Day  GMT 721  LJO-A  North JO IC  08:00:00       1  EX GPE 908      14.8        14.8  MGE  N-100  08:00:00      08
+1 2026-02-16   Day  GMT 722  LJO-A  North JO IC  08:00:00       1  EX GPE 908      14.8        14.8  MGE  N-100  08:00:00      08
+2 2026-02-16   Day  GMT 723  LJO-A  North JO IC  08:00:00       1  EX GPE 908      14.8        14.8  MGE  N-100  08:00:00      08
+3 2026-02-16   Day  GMT 724  LJO-A  North JO IC  08:00:00       1  EX GPE 908      14.8        14.8  MGE  N-100  08:00:00      08
+4 2026-02-16   Day  GMT 725  LJO-A  North JO IC  08:00:00       1  EX GPE 908      14.8        14.8  MGE  N-100  08:00:00      08
+
+
+--- Sheet: lt coal | Shape: (620, 15) ---
+Columns: ['Date', 'Shift', 'Eqnum', 'Owner', 'Activity', 'Time', 'Code', 'Description', 'Start', 'Stop', 'Plan', 'PIT', 'Dur', 'Hour Fix2', 'Hour LU']
+
+        Date  Shift    Eqnum Owner Activity     Time  Code  Description  Start   Stop  Plan          PIT  Dur Hour Fix2 Hour LU
+0 2026-02-16  Night  GHT 741   MGE  Hauling  00 - 01     8  Meal & Rest  00:00  01:00     0  South JO IC  1.0  00:00:00      O0
+1 2026-02-16  Night  GHT 748   MGE  Hauling  00 - 01     8  Meal & Rest  00:00  01:00     0  South JO IC  1.0  00:00:00      O0
+2 2026-02-16  Night  GHT 728   MGE  Hauling  00 - 01     8  Meal & Rest  00:00  01:00     0  South JO IC  1.0  00:00:00      O0
+3 2026-02-16  Night  GHT 724   MGE  Hauling  00 - 01     8  Meal & Rest  00:00  01:00     0  South JO IC  1.0  00:00:00      O0
+4 2026-02-16  Night  GHT 726   MGE  Hauling  00 - 01     8  Meal & Rest  00:00  01:00     0  South JO IC  1.0  00:00:00      O0
+
+
+--- Sheet: db hour | Shape: (24, 5) ---
+Columns: ['hour', 'Hour Fix1', 'Hour Fix2', 'shift', 'Hour LU']
+
+      hour Hour Fix1 Hour Fix2 shift Hour LU
+0  06 - 07  06:00:00  06:00:00   day      06
+1  07 - 08  07:00:00  07:00:00   day      07
+2  08 - 09  08:00:00  08:00:00   day      08
+3  09 - 10  09:00:00  09:00:00   day      09
+4  10 - 11  10:00:00  10:00:00   day      10
+
+
+--- Sheet: db coal pit | Shape: (41, 2) ---
+Columns: ['Product', 'PIT']
+
+          Product           PIT
+0              HS   South JO IC
+1           HS JO  South JO GAM
+2     HU (HUL) JO  North JO GAM
+3  HU (HUL) JO SB  North JO GAM
+4   HU (HUL-M) JO  North JO GAM
+
+
+================================================================================
+FILE: plan_hourly
+================================================================================
+
+--- Sheet: Plan Hourly OB BDE Utara | Shape: (48, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  BDE   Day  North JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97  2530.279766
+1   2  BDE   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00  2608.535841
+2   3  BDE   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00  2608.535841
+3   4  BDE   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00  2608.535841
+4   5  BDE   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00  2608.535841
+
+
+--- Sheet: Plan Hourly OB GPE Utara | Shape: (48, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  GPE   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  0.97          0.0
+1   2  GPE   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00          0.0
+2   3  GPE   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00          0.0
+3   4  GPE   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00          0.0
+4   5  GPE   Day  North JO IC  11-12  11:00:00  12:00:00  11:00:00  1.00          0.0
+
+
+--- Sheet: Plan Hourly OB MGE Utara | Shape: (48, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  MGE   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  0.97          0.0
+1   2  MGE   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00          0.0
+2   3  MGE   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00          0.0
+3   4  MGE   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00          0.0
+4   5  MGE   Day  North JO IC  11-12  11:00:00  12:00:00  11:00:00  1.00          0.0
+
+
+--- Sheet: Plan Hourly OB GPE Selatan | Shape: (48, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  GPE   Day  South JO IC  07-08  07:00:00  08:00:00  07:00:00  0.97  1353.826254
+1   2  GPE   Day  South JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00  1395.697169
+2   3  GPE   Day  South JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00  1395.697169
+3   4  GPE   Day  South JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00  1395.697169
+4   5  GPE   Day  South JO IC  11-12  11:00:00  12:00:00  11:00:00  1.00  1395.697169
+
+
+--- Sheet: Plan Hourly Hauling Utara | Shape: (192, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  SMP   Day  North JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97    91.836808
+1   2  SMP   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00    94.677122
+2   3  SMP   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00    94.677122
+3   4  SMP   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00    94.677122
+4   5  SMP   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00    94.677122
+
+
+--- Sheet: Plan Hourly Hauling Selatan | Shape: (48, 10) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly
+0   1  GHT   Day  South JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97   196.806320
+1   2  GHT   Day  South JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00   202.893113
+2   3  GHT   Day  South JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00   202.893113
+3   4  GHT   Day  South JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00   202.893113
+4   5  GHT   Day  South JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00   202.893113
+
+
+--- Sheet: Plan | Shape: (126, 34) ---
+Columns: ['Unnamed: 0', 'Unnamed: 1', 'Plan OB Utara', 'Unnamed: 3', 'Unnamed: 4', 'Unnamed: 5', 'Unnamed: 6', 'Plan OB Selatan', 'Unnamed: 8', 'Unnamed: 9', 'Unnamed: 10', 'Unnamed: 11', 'Plan Coal Hauling Utara', 'Unnamed: 13', 'Unnamed: 14', 'Unnamed: 15', 'Unnamed: 16', 'Unnamed: 17', 'Unnamed: 18', 'Unnamed: 19', 'Unnamed: 20', 'Unnamed: 21', 'Unnamed: 22', 'Plan Coal Hauling Selatan', 'Unnamed: 24', 'Unnamed: 25', 'Unnamed: 26', 'Unnamed: 27', 'Plan Coal Transit Utara', 'Unnamed: 29', 'Unnamed: 30', 'Unnamed: 31', 'Unnamed: 32', 'Unnamed: 33']
+
+            Unnamed: 0  Unnamed: 1 Plan OB Utara    Unnamed: 3    Unnamed: 4    Unnamed: 5  Unnamed: 6 Plan OB Selatan    Unnamed: 8    Unnamed: 9   Unnamed: 10  Unnamed: 11 Plan Coal Hauling Utara  Unnamed: 13 Unnamed: 14 Unnamed: 15 Unnamed: 16   Unnamed: 17 Unnamed: 18 Unnamed: 19  Unnamed: 20  Unnamed: 21  Unnamed: 22 Plan Coal Hauling Selatan  Unnamed: 24   Unnamed: 25  Unnamed: 26  Unnamed: 27 Plan Coal Transit Utara  Unnamed: 29 Unnamed: 30 Unnamed: 31  Unnamed: 32  Unnamed: 33
+0                 Date         NaN         Owner   North JO IC  North JO GAM         Total         NaN           Owner   South JO IC  South JO GAM         Total          NaN                   Owner  North JO IC         NaN         NaN         NaN  North JO GAM         NaN         NaN          NaN        Total          NaN                     Owner  South JO IC  South JO GAM        Total          NaN                   Owner  North JO IC         NaN         NaN          NaN        Total
+1                  NaN         NaN           NaN           NaN           NaN           NaN         NaN             NaN           NaN           NaN           NaN          NaN                     NaN       N Unit         TPD     Payload      Volume        N Unit         TPD     Payload       Volume          NaN          NaN                       NaN          NaN           NaN          NaN          NaN                     NaN       N Unit         TPD     Payload       Volume          NaN
+2  2026-03-01 00:00:00         NaN           BDE  56709.569185           NaN  56709.569185         NaN             GPE  30745.789779    8954.93132  39700.721099          NaN                     SMP            0           0           0           0             0           0           0            0            0          NaN                       GHT  4467.896933   1719.093156  6186.990089          NaN                     SMP            0           0           0            0            0
+3  2026-03-02 00:00:00         NaN           BDE   52319.06091           NaN   52319.06091         NaN             GPE  30745.789779    8954.93132  39700.721099          NaN                     SMP          8.1    7.966174        34.6      2232.6       5.31558    9.326242        34.6  1715.273767  3947.873767          NaN                       GHT  4467.896933   1719.093156  6186.990089          NaN                     SMP          3.6    17.98168       51.35  3324.093333  3324.093333
+4  2026-03-03 00:00:00         NaN           BDE  56709.569185           NaN  56709.569185         NaN             GPE  30342.456445    8837.43132  39179.887765          NaN                     SMP          8.1    7.966174        34.6      2232.6       5.31558    9.326242        34.6  1715.273767  3947.873767          NaN                       GHT  4398.722698   1692.477288  6091.199985          NaN                     SMP          3.6    17.98168       51.35  3324.093333  3324.093333
+
+
+--- Sheet: Plan All | Shape: (28, 4) ---
+Columns: ['Date', 'Plan OB All', 'Plan Coal All', 'Plan Transit All']
+
+        Date    Plan OB All  Plan Coal All  Plan Transit All
+0 2026-03-01  106675.630463    6186.990089          0.000000
+1 2026-03-02  101443.588282   33637.376181       6449.733333
+2 2026-03-03  106154.797129   33541.586077       6449.733333
+3 2026-03-04  106675.630463   33637.376181       6449.733333
+4 2026-03-05  106154.797129   31552.956687       5929.733333
+
+
+--- Sheet: Plan Hourly CT | Shape: (48, 12) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly', 'Hour LU', 'Plan_Daily']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly Hour LU   Plan_Daily
+0   1  SMP   Day  North JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97   136.734803      06  5929.733333
+1   2  SMP   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00   140.963715      07  5929.733333
+2   3  SMP   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00   140.963715      08  5929.733333
+3   4  SMP   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00   140.963715      09  5929.733333
+4   5  SMP   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00   140.963715      10  5929.733333
+
+
+--- Sheet: Plan Hourly OB | Shape: (192, 12) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly', 'Hour LU', 'Plan_Daily']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly Hour LU    Plan_Daily
+0   1  BDE   Day  North JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97  2530.279766      06  56709.569185
+1   2  BDE   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00  2608.535841      07  56709.569185
+2   3  BDE   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00  2608.535841      08  56709.569185
+3   4  BDE   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00  2608.535841      09  56709.569185
+4   5  BDE   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00  2608.535841      10  56709.569185
+
+
+--- Sheet: Plan Hourly CH | Shape: (240, 13) ---
+Columns: ['No', 'User', 'Shift', 'PIT', 'Hour', 'Start', 'Stop', 'Hour Fix', 'x', 'Plan_Hourly', 'Area', 'Hour LU', 'Plan_Daily']
+
+   No User Shift          PIT   Hour     Start      Stop  Hour Fix     x  Plan_Hourly   Area Hour LU    Plan_Daily
+0   1  SMP   Day  North JO IC  06-07  06:00:00  07:00:00  06:00:00  0.97    91.836808  North      06  20057.789417
+1   2  SMP   Day  North JO IC  07-08  07:00:00  08:00:00  07:00:00  1.00    94.677122  North      07  20057.789417
+2   3  SMP   Day  North JO IC  08-09  08:00:00  09:00:00  08:00:00  1.00    94.677122  North      08  20057.789417
+3   4  SMP   Day  North JO IC  09-10  09:00:00  10:00:00  09:00:00  1.00    94.677122  North      09  20057.789417
+4   5  SMP   Day  North JO IC  10-11  10:00:00  11:00:00  10:00:00  1.00    94.677122  North      10  20057.789417
+
+
+--- Sheet: Cumm Plan Vol | Shape: (100, 8) ---
+Columns: ['Hour LU', 'PIT', 'Plan OB', 'Cumm OB', 'Plan CH', 'Cumm CH', 'Plan CT', 'Cumm CT']
+
+  Hour LU          PIT      Plan OB       Cumm OB     Plan CH      Cumm CH     Plan CT      Cumm CT
+0      06  North JO IC  2530.279766   2530.279766  897.419545   897.419545  265.306335   265.306335
+1      07  North JO IC  2608.535841   5138.815607  925.174789  1822.594334  273.511685   538.818020
+2      08  North JO IC  2608.535841   7747.351448  925.174789  2747.769122  273.511685   812.329705
+3      09  North JO IC  2608.535841  10355.887289  925.174789  3672.943911  273.511685  1085.841390
+4      10  North JO IC  2608.535841  12964.423130  925.174789  4598.118699  273.511685  1359.353075
+
+DONE

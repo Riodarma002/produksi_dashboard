@@ -1,0 +1,13 @@
+﻿python :   File "<string>", line 12
+At line:1 char:24
++ venv\Scripts\activate; python -u -c "
++                        ~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (  File "<string>" 
+   , line 12:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+    print(f'  {p}: {len(subset)} rows, Production sum = 
+{subset[" Production\].sum():.0f}')
+                                                               
+ ^
+SyntaxError: unterminated string literal (detected at line 12)

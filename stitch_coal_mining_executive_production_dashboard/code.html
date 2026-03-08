@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Coal Mining Executive Production Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                        "text-main": "#2D3748",
+                        "text-muted": "#718096",
+                        "border-subtle": "#F8F9FA",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-text-main h-screen flex overflow-hidden font-display">
+    <aside class="w-64 bg-white border-r border-gray-100 flex-shrink-0 flex flex-col h-full z-20">
+        <div class="h-20 flex items-center px-8 border-b border-gray-50">
+            <div class="flex items-center gap-2">
+                <span class="material-icons-outlined text-primary text-3xl">diamond</span>
+                <span class="font-bold text-lg tracking-wide text-text-main">MINING PORTAL</span>
+            </div>
+        </div>
+        <nav class="flex-1 py-6 px-4 space-y-1">
+            <a class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg bg-primary/10 text-primary transition-colors"
+                href="#">
+                <span class="material-icons-outlined mr-3 text-xl">dashboard</span>
+                Home
+            </a>
+            <a class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                href="#">
+                <span class="material-icons-outlined mr-3 text-xl">layers</span>
+                Overburden (OB)
+            </a>
+            <a class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                href="#">
+                <span class="material-icons-outlined mr-3 text-xl">local_shipping</span>
+                Coal Hauling
+            </a>
+            <a class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                href="#">
+                <span class="material-icons-outlined mr-3 text-xl">route</span>
+                Coal Transit
+            </a>
+            <a class="group flex items-center px-4 py-3 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                href="#">
+                <span class="material-icons-outlined mr-3 text-xl">anchor</span>
+                Barging
+            </a>
+            <div class="mt-8 px-4">
+                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Reports</p>
+                <a class="group flex items-center px-4 py-2 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                    href="#">
+                    <span class="material-icons-outlined mr-3 text-lg">assessment</span>
+                    Monthly Analysis
+                </a>
+                <a class="group flex items-center px-4 py-2 text-sm font-medium rounded-lg text-text-muted hover:bg-gray-50 hover:text-text-main transition-colors"
+                    href="#">
+                    <span class="material-icons-outlined mr-3 text-lg">inventory_2</span>
+                    Inventory Logs
+                </a>
+            </div>
+        </nav>
+        <div class="p-4 border-t border-gray-50">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+                    <img alt="Executive user profile picture" class="h-full w-full object-cover"
+                        data-alt="Executive user profile picture"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUnLYx4936fOrFY9UAAfuqMZrrgWB-e7AUQfaZ_TnVOT2wQVX_FLfBNmIsX7-dVI5h9AhOhKwOqiTvnoBMY-hPW6c6-c2je24_cka5hmq2W4Km4UsA61sCt7OjC0MltcWz7gHFvg8obPPg737bhkI8AdtA7HZcckth6gkis7a9OJUUKFzWlTz-jfPK0j6PESchI2vjndGqxZLV_VdQo-yFDpaQ0E2iwk8YIFBLZ5day3Fbhrflk12nVUxH8igui__wLtPDAZCsluaL" />
+                </div>
+                <div>
+                    <p class="text-sm font-semibold text-text-main">Alex Morgan</p>
+                    <p class="text-xs text-text-muted">Production Exec.</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <main class="flex-1 flex flex-col h-full overflow-hidden bg-background-light">
+        <header class="h-20 bg-white border-b border-gray-100 flex items-center justify-between px-8 flex-shrink-0">
+            <div>
+                <h1 class="text-xl font-bold text-text-main">Production Summary Dashboard</h1>
+                <p class="text-xs text-text-muted mt-0.5">Real-time insights for Shift 1</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <button
+                        class="flex items-center gap-2 bg-white border border-gray-200 hover:border-primary/50 text-text-main text-sm font-medium py-2 px-4 rounded-lg shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-primary/20">
+                        <span class="material-icons-outlined text-gray-400 text-lg">calendar_today</span>
+                        <span>Oct 24, 2023 - Shift 1</span>
+                        <span class="material-icons-outlined text-gray-400 text-lg ml-2">expand_more</span>
+                    </button>
+                </div>
+                <button class="p-2 text-gray-400 hover:text-primary rounded-full hover:bg-gray-50 transition-colors">
+                    <span class="material-icons-outlined">notifications</span>
+                </button>
+            </div>
+        </header>
+        <div class="flex-1 overflow-y-auto p-8">
+            <div class="max-w-7xl mx-auto space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div
+                        class="bg-white rounded-xl p-8 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.03)] border border-gray-100 flex justify-between items-center group hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.05)] transition-shadow duration-300">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                                    <span class="material-icons-outlined text-lg">view_in_ar</span>
+                                </div>
+                                <h3 class="text-sm font-semibold text-text-muted uppercase tracking-wider">Stock ROM
+                                </h3>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <span class="text-4xl font-bold text-text-main font-display">45,200</span>
+                                <span class="text-sm font-medium text-text-muted">MT</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div
+                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
+                                <span class="material-icons-outlined text-xs mr-1">trending_up</span>
+                                2.1%
+                            </div>
+                            <p class="text-xs text-text-muted mt-2">vs last shift</p>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-xl p-8 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.03)] border border-gray-100 flex justify-between items-center group hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.05)] transition-shadow duration-300">
+                        <div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <div
+                                    class="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-500">
+                                    <span class="material-icons-outlined text-lg">layers</span>
+                                </div>
+                                <h3 class="text-sm font-semibold text-text-muted uppercase tracking-wider">Stockpile
+                                </h3>
+                            </div>
+                            <div class="flex items-baseline gap-3">
+                                <span class="text-4xl font-bold text-text-main font-display">120,500</span>
+                                <span class="text-sm font-medium text-text-muted">MT</span>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div
+                                class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
+                                <span class="material-icons-outlined text-xs mr-1">trending_up</span>
+                                1.5%
+                            </div>
+                            <p class="text-xs text-text-muted mt-2">vs last shift</p>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-lg font-bold text-text-main">Production Operations</h2>
+                        <button
+                            class="text-primary hover:text-primary/80 text-sm font-medium flex items-center gap-1 transition-colors">
+                            Download Report
+                            <span class="material-icons-outlined text-base">download</span>
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <div
+                                    class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-gray-100 relative">
+                                    <span class="text-[10px] font-bold text-text-muted absolute">92%</span>
+                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                        <path class="text-gray-100"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-width="2.5"></path>
+                                        <path class="text-orange-400"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-dasharray="92, 100"
+                                            stroke-width="2.5"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="p-6 pb-2 flex-1">
+                                <div class="flex items-center justify-between mb-6 pr-12">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-orange-400"></span>
+                                        <h3 class="font-semibold text-text-main text-sm">Overburden</h3>
+                                    </div>
+                                    <span
+                                        class="text-xs font-medium px-2 py-1 bg-gray-50 text-text-muted rounded border border-gray-100">BCM</span>
+                                </div>
+                                <div class="space-y-4 mb-4">
+                                    <div>
+                                        <p class="text-xs text-text-muted uppercase tracking-wider font-medium mb-1">
+                                            Actual</p>
+                                        <span
+                                            class="text-3xl font-bold text-text-main tracking-tight block">124,500</span>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between border-b border-gray-50 pb-1 mb-1">
+                                            <span
+                                                class="text-xs text-text-muted uppercase tracking-wider font-medium">Plan</span>
+                                            <span class="text-sm font-semibold text-text-muted">135,000</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2">
+                                            <div class="bg-orange-400 h-1.5 rounded-full" style="width: 92%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="border-t border-gray-50 bg-gray-50/30 p-4 rounded-b-xl grid grid-cols-2 gap-4 mt-auto">
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">MTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">2.45 M</p>
+                                    <p class="text-[10px] text-green-600 font-medium flex items-center">
+                                        <span class="material-icons-outlined text-[10px] mr-0.5">arrow_upward</span>
+                                        4.2%
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">YTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">18.2 M</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <div
+                                    class="flex items-center justify-center px-2 py-1 rounded-full bg-green-50 border border-green-100">
+                                    <span class="text-xs font-bold text-green-700">109%</span>
+                                    <span
+                                        class="material-icons-outlined text-green-600 text-sm ml-1">check_circle</span>
+                                </div>
+                            </div>
+                            <div class="p-6 pb-2 flex-1">
+                                <div class="flex items-center justify-between mb-6 pr-12">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-blue-400"></span>
+                                        <h3 class="font-semibold text-text-main text-sm">Coal Hauling</h3>
+                                    </div>
+                                    <span
+                                        class="text-xs font-medium px-2 py-1 bg-gray-50 text-text-muted rounded border border-gray-100">MT</span>
+                                </div>
+                                <div class="space-y-4 mb-4">
+                                    <div>
+                                        <p class="text-xs text-text-muted uppercase tracking-wider font-medium mb-1">
+                                            Actual</p>
+                                        <span
+                                            class="text-3xl font-bold text-text-main tracking-tight block">32,800</span>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between border-b border-gray-50 pb-1 mb-1">
+                                            <span
+                                                class="text-xs text-text-muted uppercase tracking-wider font-medium">Plan</span>
+                                            <span class="text-sm font-semibold text-text-muted">30,000</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                                            <div class="bg-blue-400 h-1.5 rounded-full" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="border-t border-gray-50 bg-gray-50/30 p-4 rounded-b-xl grid grid-cols-2 gap-4 mt-auto">
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">MTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">850.4 K</p>
+                                    <p class="text-[10px] text-green-600 font-medium flex items-center">
+                                        <span class="material-icons-outlined text-[10px] mr-0.5">arrow_upward</span>
+                                        1.8%
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">YTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">7.12 M</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <div
+                                    class="flex items-center justify-center w-12 h-12 rounded-full border-4 border-gray-100 relative">
+                                    <span class="text-[10px] font-bold text-text-muted absolute">95%</span>
+                                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                                        <path class="text-gray-100"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-width="2.5"></path>
+                                        <path class="text-purple-400"
+                                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                            fill="none" stroke="currentColor" stroke-dasharray="95, 100"
+                                            stroke-width="2.5"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="p-6 pb-2 flex-1">
+                                <div class="flex items-center justify-between mb-6 pr-12">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+                                        <h3 class="font-semibold text-text-main text-sm">Coal Transit</h3>
+                                    </div>
+                                    <span
+                                        class="text-xs font-medium px-2 py-1 bg-gray-50 text-text-muted rounded border border-gray-100">MT</span>
+                                </div>
+                                <div class="space-y-4 mb-4">
+                                    <div>
+                                        <p class="text-xs text-text-muted uppercase tracking-wider font-medium mb-1">
+                                            Actual</p>
+                                        <span
+                                            class="text-3xl font-bold text-text-main tracking-tight block">28,450</span>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between border-b border-gray-50 pb-1 mb-1">
+                                            <span
+                                                class="text-xs text-text-muted uppercase tracking-wider font-medium">Plan</span>
+                                            <span class="text-sm font-semibold text-text-muted">30,000</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2">
+                                            <div class="bg-purple-400 h-1.5 rounded-full" style="width: 95%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="border-t border-gray-50 bg-gray-50/30 p-4 rounded-b-xl grid grid-cols-2 gap-4 mt-auto">
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">MTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">790.2 K</p>
+                                    <p class="text-[10px] text-red-500 font-medium flex items-center">
+                                        <span class="material-icons-outlined text-[10px] mr-0.5">arrow_downward</span>
+                                        0.5%
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">YTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">6.85 M</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="bg-white rounded-xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(0,0,0,0.02)] hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.04)] transition-all duration-300 flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 p-4">
+                                <div
+                                    class="flex items-center justify-center px-2 py-1 rounded-full bg-green-50 border border-green-100">
+                                    <span class="text-xs font-bold text-green-700">103%</span>
+                                    <span
+                                        class="material-icons-outlined text-green-600 text-sm ml-1">check_circle</span>
+                                </div>
+                            </div>
+                            <div class="p-6 pb-2 flex-1">
+                                <div class="flex items-center justify-between mb-6 pr-12">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2 h-2 rounded-full bg-teal-400"></span>
+                                        <h3 class="font-semibold text-text-main text-sm">Barging</h3>
+                                    </div>
+                                    <span
+                                        class="text-xs font-medium px-2 py-1 bg-gray-50 text-text-muted rounded border border-gray-100">MT</span>
+                                </div>
+                                <div class="space-y-4 mb-4">
+                                    <div>
+                                        <p class="text-xs text-text-muted uppercase tracking-wider font-medium mb-1">
+                                            Actual</p>
+                                        <span
+                                            class="text-3xl font-bold text-text-main tracking-tight block">35,100</span>
+                                    </div>
+                                    <div>
+                                        <div
+                                            class="flex items-center justify-between border-b border-gray-50 pb-1 mb-1">
+                                            <span
+                                                class="text-xs text-text-muted uppercase tracking-wider font-medium">Plan</span>
+                                            <span class="text-sm font-semibold text-text-muted">34,000</span>
+                                        </div>
+                                        <div class="w-full bg-gray-100 rounded-full h-1.5 mt-2 overflow-hidden">
+                                            <div class="bg-teal-400 h-1.5 rounded-full" style="width: 100%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                class="border-t border-gray-50 bg-gray-50/30 p-4 rounded-b-xl grid grid-cols-2 gap-4 mt-auto">
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">MTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">920.5 K</p>
+                                    <p class="text-[10px] text-green-600 font-medium flex items-center">
+                                        <span class="material-icons-outlined text-[10px] mr-0.5">arrow_upward</span>
+                                        3.5%
+                                    </p>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] text-text-muted uppercase tracking-wider font-semibold">YTD
+                                    </p>
+                                    <p class="text-sm font-semibold text-text-main mt-0.5">8.05 M</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-8">
+                    <div
+                        class="bg-gradient-to-br from-primary/5 to-white rounded-xl p-6 border border-gray-100 flex items-center justify-between col-span-1 lg:col-span-1">
+                        <div>
+                            <p class="text-xs font-semibold text-primary uppercase tracking-wider mb-1">Site Conditions
+                            </p>
+                            <h4 class="text-lg font-bold text-text-main">Clear Sky</h4>
+                            <p class="text-sm text-text-muted">Visibility: 10km</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-3xl font-light text-text-main">28°C</span>
+                            <span class="material-icons-outlined text-orange-400 block text-2xl mt-1">wb_sunny</span>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-white rounded-xl p-6 border border-gray-100 flex items-center gap-4 col-span-1 lg:col-span-2">
+                        <div class="h-12 w-12 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0">
+                            <span class="material-icons-outlined text-green-600">health_and_safety</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-text-main">Safety Update</p>
+                            <p class="text-sm text-text-muted">Site operating at <span
+                                    class="text-green-600 font-semibold">100% safety compliance</span> for current
+                                shift. No incidents reported in the last 24 hours.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
