@@ -214,13 +214,6 @@ def inject_theme():
             min-width: 100% !important;
         }
 
-        /* ── Sidebar: collapse on mobile ── */
-        section[data-testid="stSidebar"] {
-            width: 0 !important;
-            min-width: 0 !important;
-            overflow: hidden !important;
-        }
-
         /* ── Header ── */
         .header-row {
             flex-direction: column;
