@@ -70,16 +70,18 @@ def _build_achievement_html(pct: float, color: str) -> str:
     """Build achievement donut chart HTML."""
     bg, text_color, border_color = get_achievement_bg(pct)
     visual_pct = min(pct, 100)
+
+    # When 100%, fill the dasharray completely (100, 100) for a solid ring
+    dash = f"{visual_pct:.1f},100"
     
     return f'''
     <div class="ach-badge">
         <div style="width: 52px; height: 52px; position: relative; display: flex; align-items: center; justify-content: center; background: #fff; border-radius: 50%;">
-            <span style="font-size: 11px; font-weight: 800; color: {text_color}; z-index: 10;">{pct:.1f}%</span>
             <svg style="position:absolute;width:100%;height:100%;transform:rotate(-90deg);left:0;top:0;" viewBox="0 0 36 36">
                 <!-- Background ring -->
                 <path style="fill:none;stroke:#f1f5f9;stroke-width:3.5;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
-                <!-- Foreground progress ring -->
-                <path style="fill:none;stroke:{text_color};stroke-width:3.5;stroke-dasharray:{visual_pct:.1f},100;stroke-linecap:round;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                <!-- Foreground progress ring (no label, just the ring fill) -->
+                <path style="fill:none;stroke:{text_color};stroke-width:3.5;stroke-dasharray:{dash};stroke-linecap:round;" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
             </svg>
         </div>
     </div>'''
