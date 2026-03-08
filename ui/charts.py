@@ -68,9 +68,9 @@ def build_cumm_chart(
             line_dash="dash",
             line_color=colors["line"],
             line_width=1.5,
-            annotation_text=f"Target: {fmt(plan_daily_val)}",
+            annotation_text=f"<b>Target: {fmt(plan_daily_val)}</b>",
             annotation_position="top left",
-            annotation_font=dict(size=10, color=colors["line"]),
+            annotation_font=dict(size=12, color=colors["line"]),
         )
 
     # 2) Actual area fill + line
@@ -210,7 +210,7 @@ def build_cumm_chart(
             showgrid=False,
             linecolor="#e5e7eb",
             linewidth=1,
-            tickfont=dict(size=9, color="#9ca3af", family="Inter"),
+            tickfont=dict(size=11, color="#475569", family="Inter"),
             tickangle=0,
         ),
         yaxis=dict(
