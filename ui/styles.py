@@ -23,6 +23,12 @@ def inject_css():
             background-color: #f6f7f8;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
+            overflow-y: hidden;
+        }
+        
+        /* Hide the main page scrollbar */
+        section.main > div:first-child {
+            overflow-y: hidden !important;
         }
 
         /* ── Sidebar ──────────────────────────────────── */
