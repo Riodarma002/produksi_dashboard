@@ -164,10 +164,9 @@ def inject_theme():
         white-space: nowrap;
     }
 
-    /* ── KPI Card Classes (used in inline HTML) ──────── */
     .kpi-value { font-size: 32px; }
     .kpi-title { font-size: 13px; }
-    .kpi-badge { font-size: 11px; }
+    .kpi-badge { font-size: 16px; padding: 4px 12px !important; }
     .stock-val { font-size: 20px; }
     .stock-label { font-size: 11px; }
     .stock-icon { font-size: 16px; }
@@ -227,7 +226,7 @@ def inject_theme():
         /* ── KPI cards ── */
         .kpi-value { font-size: 18px !important; }
         .kpi-title { font-size: 9px  !important; }
-        .kpi-badge { font-size: 7px  !important; padding: 1px 4px !important; }
+        .kpi-badge { font-size: 12px  !important; padding: 2px 8px !important; }
 
         /* ── Stock cards ── */
         .stock-val   { font-size: 15px !important; }
@@ -261,21 +260,54 @@ def inject_theme():
         /* ── Chart section title ── */
         .section-title { font-size: 12px !important; }
 
-        /* ── Segmented control: wrap to 2 rows on mobile ── */
+        /* ── Segmented control: horizontal scroll on mobile ── */
         div[data-testid="stSegmentedControl"] {
-            flex-wrap: wrap !important;
+            flex-wrap: nowrap !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            -webkit-overflow-scrolling: touch; /* smooth scrolling */
             gap: 4px !important;
+            padding-bottom: 4px; /* for scrollbar */
+        }
+        div[data-testid="stSegmentedControl"]::-webkit-scrollbar {
+            height: 2px;
+        }
+        div[data-testid="stSegmentedControl"]::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 2px;
         }
         div[data-testid="stSegmentedControl"] button {
-            font-size: 10px !important;
-            padding: 5px 10px !important;
-            flex: 1 1 40% !important; /* 2 buttons per row */
+            font-size: 11px !important;
+            padding: 6px 14px !important;
+            flex: 0 0 auto !important; /* prevent shrinking */
+            white-space: nowrap !important;
+        }
+
+        /* ── Aggressively Hide Streamlit Header & Toolbar ── */
+        [data-testid="stHeader"],
+        [data-testid="stToolbar"],
+        [data-testid="stAppDeployButton"],
+        .stAppDeployButton,
+        [data-testid="stStatusWidget"],
+        #MainMenu, 
+        header, 
+        .stActionButton {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
         }
 
         /* ── Fix alignment: compensate for sidebar arrow >> ── */
         .stAppViewBlockContainer {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
+        }
+
+        /* ── Tighter vertical spacing globally ── */
+        .block-container {
+            padding-top: 2rem !important;
         }
 
         /* ── Tables ── */

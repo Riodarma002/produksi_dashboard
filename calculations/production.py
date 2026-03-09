@@ -90,6 +90,27 @@ def calc_stripping_ratio(actuals: dict) -> float:
     return actuals["actual_ob"] / actuals["actual_ch"] if actuals["actual_ch"] > 0 else 0
 
 
+def calc_global_stripping_ratio(sheets: dict, date_range: tuple) -> float:
+    """Calculate the global stripping ratio across all JOs."""
+    prod_ob = sheets["prod_ob"]
+    prod_ch = sheets["prod_ch"]
+    start_date, end_date = date_range
+
+    ob_range = prod_ob[
+        (prod_ob["Date"] >= start_date) & 
+        (prod_ob["Date"] <= end_date)
+    ]
+    ch_range = prod_ch[
+        (prod_ch["Date"] >= start_date) & 
+        (prod_ch["Date"] <= end_date)
+    ]
+
+    total_ob = ob_range["Volume"].sum()
+    total_ch = ch_range["Netto"].sum() / 1000  # kg -> MT
+
+    return total_ob / total_ch if total_ch > 0 else 0
+
+
 def calc_coal_stock(
     sheets: dict, date_range: tuple, input_values: dict
 ) -> dict:

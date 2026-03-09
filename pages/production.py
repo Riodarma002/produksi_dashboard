@@ -11,7 +11,7 @@ from state import init_data, get_input_values, render_date_selector
 from config import PIT_REGISTRY
 from calculations.production import (
     filter_data, get_plan_values, calc_actuals,
-    calc_achievements, calc_stripping_ratio, calc_coal_stock,
+    calc_achievements, calc_stripping_ratio, calc_global_stripping_ratio, calc_coal_stock,
 )
 from ui.kpi_cards import render_all_metrics
 from ui.charts import render_production_charts
@@ -21,7 +21,7 @@ sheets = init_data()
 input_values = get_input_values()
 
 pit_names = list(PIT_REGISTRY.keys())
-ROTATE_INTERVAL_MS = 15_000  # 15 seconds
+ROTATE_INTERVAL_MS = 30_000  # 30 seconds
 
 # ── Session state init ────────────────────────────────────────
 if "jo_idx" not in st.session_state:
@@ -39,9 +39,9 @@ auto_count = st_autorefresh(interval=ROTATE_INTERVAL_MS, key="auto_rotate")
 is_auto = auto_count != st.session_state.prev_auto_count
 st.session_state.prev_auto_count = auto_count
 
-# If auto-refresh AND user has been idle for >15s → advance JO
+# If auto-refresh AND user has been idle for >30s → advance JO
 idle_seconds = time.time() - st.session_state.user_interact_time
-if is_auto and idle_seconds > 15:
+if is_auto and idle_seconds > 30:
     st.session_state.jo_idx = (st.session_state.jo_idx + 1) % len(pit_names)
     st.session_state.jo_toggle = pit_names[st.session_state.jo_idx]
 

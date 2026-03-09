@@ -68,7 +68,7 @@ def build_cumm_chart(
             line_dash="dash",
             line_color=colors["line"],
             line_width=1.5,
-            annotation_text=f"<b>Target: {fmt(plan_daily_val)}</b>",
+            annotation_text=f"<b>Plan: {fmt(plan_daily_val)}</b>",
             annotation_position="top left",
             annotation_font=dict(size=12, color=colors["line"]),
         )
@@ -170,8 +170,8 @@ def build_cumm_chart(
         # (Manual data point annotations removed in favor of native scatter textposition)
         # Summary annotation (above chart, right side)
         summary_text = (
-            f"<span style='font-size:12px;color:{colors['marker']}'><b>{fmt(total_actual / 1000, 1)}K</b></span>  "
-            f"<span style='font-size:11px;color:#94a3b8'>Avg {fmt(avg_per_hour / 1000, 1)}K/hr · {hours_count}h</span>"
+            f"<span style='font-size:14px;color:{colors['marker']}'><b>{fmt(total_actual / 1000, 1)}K</b></span>  "
+            f"<span style='font-size:13px;color:#64748b;font-weight:600;'>Avg {fmt(avg_per_hour / 1000, 1)}K/hr · {hours_count}h</span>"
         )
         fig.add_annotation(
             xref="paper", yref="paper",
