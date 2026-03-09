@@ -7,6 +7,16 @@ import pandas as pd
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 
+import sys
+import os
+from pathlib import Path
+
+# Add project root to sys.path so Streamlit Cloud can find our modules
+current_dir = Path(__file__).parent.absolute()
+project_root = current_dir.parent.absolute()
+if str(project_root) not in sys.path:
+    sys.path.append(str(project_root))
+
 from state import init_data, get_input_values, render_date_selector
 from config import PIT_REGISTRY
 from calculations.production import (
