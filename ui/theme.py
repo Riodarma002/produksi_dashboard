@@ -92,44 +92,6 @@ def inject_theme():
         margin-top: 8px !important;
     }
 
-    /* Sidebar toggle → burger ☰ */
-    button[data-testid="stSidebarCollapseButton"],
-    button[data-testid="collapsedControl"],
-    button[data-testid="baseButton-headerNoPadding"],
-    [data-testid="collapsedControl"],
-    section[data-testid="stSidebar"] > div:first-child > button {
-        background: #ffffff !important;
-        border: 1px solid #eef0f4 !important;
-        border-radius: 10px !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.06) !important;
-        width: 36px !important;
-        height: 36px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        overflow: hidden !important;
-        font-size: 0 !important;
-        color: transparent !important;
-    }
-    button[data-testid="stSidebarCollapseButton"] *,
-    button[data-testid="collapsedControl"] *,
-    button[data-testid="baseButton-headerNoPadding"] *,
-    [data-testid="collapsedControl"] *,
-    section[data-testid="stSidebar"] > div:first-child > button * {
-        display: none !important;
-    }
-    button[data-testid="stSidebarCollapseButton"]::after,
-    button[data-testid="collapsedControl"]::after,
-    button[data-testid="baseButton-headerNoPadding"]::after,
-    [data-testid="collapsedControl"]::after,
-    section[data-testid="stSidebar"] > div:first-child > button::after {
-        content: '☰' !important;
-        font-size: 18px !important;
-        color: #1a1f36 !important;
-        font-weight: 600 !important;
-        display: block !important;
-        visibility: visible !important;
-    }
 
     /* ── Header Layout ───────────────────────────────── */
     .header-row {
@@ -194,7 +156,7 @@ def inject_theme():
        ══════════════════════════════════════════════════ */
     @media (max-width: 768px) {
         .stMainBlockContainer {
-            padding-top: 0.25rem !important;
+            padding-top: 4rem !important;
             padding-left: 0.5rem !important;
             padding-right: 0.5rem !important;
         }
@@ -284,19 +246,36 @@ def inject_theme():
         }
 
         /* ── Aggressively Hide Streamlit Header & Toolbar ── */
-        [data-testid="stHeader"],
-        [data-testid="stToolbar"],
         [data-testid="stAppDeployButton"],
         .stAppDeployButton,
-        [data-testid="stStatusWidget"],
-        #MainMenu, 
-        header, 
-        .stActionButton {
+        [data-testid="stStatusWidget"] {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
             height: 0 !important;
             width: 0 !important;
+        }
+
+        /* ── Force Header Visibility ── */
+        [data-testid="stHeader"] {
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: auto !important;
+            z-index: 999999 !important;
+            background: transparent !important;
+        }
+
+        /* ── Show Sidebar Toggle (Hamburger Menu) ── */
+        [data-testid="collapsedControl"],
+        [data-testid="collapsedControl"] button,
+        [data-testid="collapsedControl"] svg {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+            height: auto !important;
+            width: auto !important;
+            color: #0f172a !important; /* Ensure it's legible against light bg */
         }
 
         /* ── Fix alignment: compensate for sidebar arrow >> ── */

@@ -12,10 +12,11 @@ def inject_css():
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         /* ── Reset & Base ─────────────────────────────── */
-        #MainMenu, header, footer { visibility: hidden; }
+        #MainMenu, footer { visibility: hidden; }
         
         .block-container {
-            padding: 0 !important;
+            padding-top: 3.5rem !important;
+            padding-bottom: 2rem !important;
             max-width: 100% !important;
         }
         
