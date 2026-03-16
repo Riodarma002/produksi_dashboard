@@ -180,64 +180,54 @@ def _stock_card(icon_svg, label, value, unit="", bg_color="#f1f5f9", icon_color=
 
 
 def render_all_metrics(plans, actuals, achievements, has_ct, sr, stock):
-    """Render all metrics in unified grid matching reference design."""
+    """Render all metrics in responsive CSS grid matching reference design."""
+    
+    # ── CSS Native Grid Configuration ──
+    st.markdown("""
+    <style>
+    /* Responsive Grid for Production Cards */
+    .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 16px;
+        margin-bottom: 16px;
+    }
+    
+    /* Responsive Grid for Stock Cards */
+    .stock-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 16px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
     # ── Row 1: Production cards ───────────────────────────────
+    cards_html = []
+    
+    cards_html.append(_prod_card("Overburden", "BCM", actuals["actual_ob"], plans["plan_ob"], achievements["ach_ob"]))
+    cards_html.append(_prod_card("Coal Hauling", "MT", actuals["actual_ch"], plans["plan_ch"], achievements["ach_ch"]))
+    
     if has_ct:
-        # 3 columns: OB, CH, CT
-        c1, c2, c3 = st.columns(3, gap="small")
-        with c1:
-            st.markdown(
-                _prod_card("Overburden", "BCM",
-                           actuals["actual_ob"], plans["plan_ob"], achievements["ach_ob"]),
-                unsafe_allow_html=True,
-            )
-        with c2:
-            st.markdown(
-                _prod_card("Coal Hauling", "MT",
-                           actuals["actual_ch"], plans["plan_ch"], achievements["ach_ch"]),
-                unsafe_allow_html=True,
-            )
-        with c3:
-            st.markdown(
-                _prod_card("Coal Transit", "MT",
-                           actuals["actual_ct"], plans["plan_ct"], achievements["ach_ct"]),
-                unsafe_allow_html=True,
-            )
-    else:
-        # 2 columns: OB, CH (wider cards, no CT)
-        c1, c2 = st.columns(2, gap="small")
-        with c1:
-            st.markdown(
-                _prod_card("Overburden", "BCM",
-                           actuals["actual_ob"], plans["plan_ob"], achievements["ach_ob"]),
-                unsafe_allow_html=True,
-            )
-        with c2:
-            st.markdown(
-                _prod_card("Coal Hauling", "MT",
-                           actuals["actual_ch"], plans["plan_ch"], achievements["ach_ch"]),
-                unsafe_allow_html=True,
-            )
+        cards_html.append(_prod_card("Coal Transit", "MT", actuals["actual_ct"], plans["plan_ct"], achievements["ach_ct"]))
 
-    # ── Row 2: SR + Stock metrics (always 3 columns) ─────────
+    # Wrap all production cards in our responsive grid
+    st.markdown(f'<div class="kpi-grid">{"".join(cards_html)}</div>', unsafe_allow_html=True)
+
+    # ── Row 2: SR + Stock metrics ───────────────────────────
     st.markdown('<div style="height:12px;"></div>', unsafe_allow_html=True)
-
-    s1, s2, s3 = st.columns(3, gap="small")
 
     # SVG Icons
     svg_sr = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 21V3m0 0L3 7m4-4l4 4M17 3v18m0 0l4-4m-4 4l-4-4"/></svg>'
     svg_rom = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 12c0 1.66 4.03 3 9 3s9-1.34 9-3"/></svg>'
     svg_port = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>'
 
-    with s1:
-        st.markdown(_stock_card(svg_sr, "Stripping Ratio", fmt(sr, 2), "Ratio", 
-                                bg_color="rgba(59, 130, 246, 0.1)", icon_color="#3b82f6"), unsafe_allow_html=True)
+    stock_html = [
+        _stock_card(svg_sr, "Stripping Ratio", fmt(sr, 2), "Ratio", bg_color="rgba(59, 130, 246, 0.1)", icon_color="#3b82f6"),
+        _stock_card(svg_rom, "Stock ROM", fmt(stock["coal_stock_rom"]), "MT", bg_color="rgba(34, 197, 94, 0.1)", icon_color="#22c55e"),
+        _stock_card(svg_port, "Stock Port", fmt(stock["coal_stock_port"]), "MT", bg_color="rgba(99, 102, 241, 0.1)", icon_color="#6366f1")
+    ]
 
-    with s2:
-        st.markdown(_stock_card(svg_rom, "Stock ROM", fmt(stock["coal_stock_rom"]), "MT",
-                                bg_color="rgba(34, 197, 94, 0.1)", icon_color="#22c55e"), unsafe_allow_html=True)
-
-    with s3:
-        st.markdown(_stock_card(svg_port, "Stock Port", fmt(stock["coal_stock_port"]), "MT",
-                                bg_color="rgba(99, 102, 241, 0.1)", icon_color="#6366f1"), unsafe_allow_html=True)
+    # Wrap all stock cards in our responsive grid
+    st.markdown(f'<div class="stock-grid">{"".join(stock_html)}</div>', unsafe_allow_html=True)
 
