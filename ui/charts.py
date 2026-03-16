@@ -289,54 +289,10 @@ def build_cumm_chart(
 def render_production_charts(
     ob_f, ch_f, cumm_pit, plan_ob_val: float, plan_ch_val: float, rain_f: pd.DataFrame = None
 ):
-    """Render OB and CH cumulative charts responsively."""
+    """Render OB and CH cumulative charts side-by-side."""
     st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
 
-    # CSS for responsive chart stacking
-    st.markdown("""
-    <style>
-    .chart-container-responsive {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 24px;
-        width: 100%;
-    }
-    .chart-box {
-        flex: 1 1 500px; /* Grow to fill, shrink if needed, target 500px width min */
-        min-width: 0; /* Prevent flexbox blowout */
-    }
-    </style>
-    <div class="chart-container-responsive">
-    """, unsafe_allow_html=True)
-
-    # We use st.container() inside the flexbox visual structure so Streamlit Elements render correctly
-    c_ob, c_ch = st.columns([1, 1]) # We still use columns internally to Streamlit, but CSS will break them!
-    
-    # Actually, st.columns forces flex-wrap: nowrap in Streamlit.
-    # To truly make it responsive, we just render them sequentially into Custom Divs via markdown trick, 
-    # but Streamlit charts can't be put in raw HTML divs easily without custom components.
-    # 
-    # Streamlit Native Responsive approach: 
-    # Streamlit natively stacks columns if the screen is < ~640px. For wider screens like laptops (1366px), 
-    # they stay side-by-side. If the user wants them bigger on laptops, we should detect or just stack them always, 
-    # but to let them wrap fluidly, we'll try injecting CSS to force the Streamlit column wrapper to wrap.
-
-    # Force Streamlit's internal horizontal block to wrap
-    st.markdown("""
-    <style>
-    /* Force Streamlit row to wrap on mid-sized screens */
-    [data-testid="stHorizontalBlock"] {
-        flex-wrap: wrap !important;
-    }
-    /* Make the columns consume full width when wrapped */
-    [data-testid="column"] {
-        min-width: min(100%, 500px) !important;
-        flex: 1 1 auto !important;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-    col_ob, col_ch = st.columns(2, gap="medium")
+    col_ob, col_ch = st.columns(2, gap="small")
 
     with col_ob:
         fig_ob = build_cumm_chart(
@@ -345,7 +301,7 @@ def render_production_charts(
             cumm_pit, palette="ob",
             rain_df=rain_f
         )
-        st.plotly_chart(fig_ob, use_container_width=True)
+        st.plotly_chart(fig_ob, width="stretch", config={"responsive": True, "displayModeBar": False})
 
     with col_ch:
         fig_ch = build_cumm_chart(
@@ -354,4 +310,4 @@ def render_production_charts(
             cumm_pit, convert_kg=False, palette="ch",
             rain_df=rain_f
         )
-        st.plotly_chart(fig_ch, use_container_width=True)
+        st.plotly_chart(fig_ch, width="stretch", config={"responsive": True, "displayModeBar": False})
