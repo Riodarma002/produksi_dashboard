@@ -8,11 +8,19 @@ import streamlit as st
 from backend.data_loader import load_data, extract_sheets, normalize_dataframes, parse_input_plan
 
 
+import os
+from config import CACHE_FILE
+
 def init_data() -> dict:
     """
     Load, extract, normalize and cache all data.
+    Automatically reloads if the background sync manager has updated the cache file.
     """
-    if "sheets" not in st.session_state:
+    mtime = 0
+    if os.path.exists(CACHE_FILE):
+        mtime = os.path.getmtime(CACHE_FILE)
+        
+    if "sheets" not in st.session_state or st.session_state.get("cache_mtime") != mtime:
         data = load_data()
         
         # Check if the returned data is already the processed 'cached' dict
@@ -25,6 +33,8 @@ def init_data() -> dict:
             normalize_dataframes(sheets)
             st.session_state["sheets"] = sheets
             st.session_state["input_values"] = parse_input_plan(sheets["input_plan"])
+            
+        st.session_state["cache_mtime"] = mtime
             
     return st.session_state["sheets"]
 
