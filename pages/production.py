@@ -154,35 +154,61 @@ else:
 # Header with simple native Streamlit components
 st.markdown("### Dashboard Produksi")
 
-# Info row
-col_info, col_pit, col_controls = st.columns([2, 3, 1], gap="small", vertical_alignment="center")
+# Info row - Flexbox implementation for better responsiveness
+st.markdown("""
+<style>
+.header-responsive-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.header-info-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+</style>
+""", unsafe_allow_html=True)
 
-with col_info:
-    st.markdown(f"""
-    <div style="display: flex; gap: 0.75rem; align-items: center;">
-        <div style="background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; font-size: 0.875rem; font-weight: 600; color: #475569;">
-            Area: <strong>{display_jo}</strong>
+# Container for all header elements
+header_container = st.container()
+
+with header_container:
+    col_info, col_controls = st.columns([4, 1], gap="medium", vertical_alignment="center")
+    
+    with col_info:
+        # Combine the info cards and the segmented control into one flowing column
+        st.markdown(f"""
+        <div class="header-info-group">
+            <div style="background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #e2e8f0; font-size: 0.875rem; font-weight: 600; color: #475569; white-space: nowrap;">
+                Area: <strong>{display_jo}</strong>
+            </div>
+            <div style="background: #e0f2fe; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #bae6fd; font-size: 0.8125rem; font-weight: 600; color: #0369a1; white-space: nowrap;">
+                {last_input_str}
+            </div>
         </div>
-        <div style="background: #e0f2fe; padding: 0.5rem 1rem; border-radius: 0.5rem; border: 1px solid #bae6fd; font-size: 0.8125rem; font-weight: 600; color: #0369a1;">
-            {last_input_str}
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
+        
+        st.markdown("<div style='margin-top: 8px;'></div>", unsafe_allow_html=True)
+        
+        selected_pit_new = st.segmented_control(
+            label="PIT",
+            options=pit_names,
+            label_visibility="collapsed",
+            key="jo_toggle_final_fix"
+        )
 
-with col_pit:
-    selected_pit_new = st.segmented_control(
-        label="PIT",
-        options=pit_names,
-        label_visibility="collapsed",
-        key="jo_toggle_final_fix"
-    )
-
-with col_controls:
-    play_pause = st.button(
-        "⏸️" if st.session_state.auto_play else "▶️",
-        help="Jeda/Lanjutkan rotasi otomatis",
-        use_container_width=True
-    )
+    with col_controls:
+        # Action button pushed to the right/bottom
+        play_pause = st.button(
+            "⏸️ Pause" if st.session_state.auto_play else "▶️ Play",
+            help="Jeda/Lanjutkan rotasi otomatis",
+            use_container_width=True
+        )
 
 # Minimal spacing
 st.markdown("  ")  # Small spacing instead of divider
