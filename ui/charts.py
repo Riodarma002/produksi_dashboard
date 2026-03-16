@@ -1,6 +1,6 @@
 """
 Charts — Cumulative production charts with Plotly.
-Side-by-side layout, gradient fills, per-point colored labels, clean design.
+Side-by-side layout, per-point colored labels, clean design.
 """
 import pandas as pd
 import plotly.graph_objects as go
@@ -10,14 +10,27 @@ from config import OP_HOURS, COLORS
 from calculations.formatting import fmt
 
 
-# ── Color palette ─────────────────────────────────────────────
+# ── Modern Color Palette (Professional & Sophisticated) ──────────────────
 CHART_COLORS = {
-    "ob": {"line": "#f59e0b", "fill": "rgba(245,158,11,0.10)", "marker": "#d97706"},
-    "ch": {"line": "#3b82f6", "fill": "rgba(59,130,246,0.10)", "marker": "#2563eb"},
-    "plan": "#94a3b8",
-    "target": "#e2e8f0",
-    "success": "#10b981",
-    "danger": "#f43f5e",
+    "ob": {
+        "line": "#6366f1",      # Indigo 500
+        "fill": "rgba(99, 102, 241, 0.12)",
+        "marker": "#4f46e5",    # Indigo 600
+        "gradient_start": "rgba(99, 102, 241, 0.2)",
+        "gradient_end": "rgba(99, 102, 241, 0.0)"
+    },
+    "ch": {
+        "line": "#10b981",      # Emerald 500
+        "fill": "rgba(16, 185, 129, 0.12)",
+        "marker": "#059669",    # Emerald 600
+        "gradient_start": "rgba(16, 185, 129, 0.2)",
+        "gradient_end": "rgba(16, 185, 129, 0.0)"
+    },
+    "plan": "#64748b",          # Neutral gray
+    "target": "#94a3b8",        # Light gray
+    "success": "#10b981",       # Emerald
+    "danger": "#ef4444",        # Red
+    "warning": "#f59e0b",       # Amber
 }
 
 
@@ -31,8 +44,9 @@ def build_cumm_chart(
     cumm_pit: pd.DataFrame,
     convert_kg: bool = False,
     palette: str = "ob",
+    rain_df: pd.DataFrame = None,
 ) -> go.Figure:
-    """Build cumulative chart with gradient fill and per-point labels."""
+    """Build cumulative chart with per-point labels."""
 
     colors = CHART_COLORS[palette]
 
@@ -59,21 +73,41 @@ def build_cumm_chart(
     has_data = hourly_full[hourly_full["Actual"] > 0]
     last_actual_idx = has_data.index.max() if len(has_data) > 0 else -1
 
+    # Dynamic Y-axis range calculation (Must happen before figure updates)
+    all_y = []
+    if last_actual_idx >= 0:
+        all_y.append(hourly_full.iloc[:last_actual_idx + 1]["Cumm_Actual"].max())
+    if plan_daily_val > 0:
+        all_y.append(plan_daily_val)
+    y_max = max(all_y) * 1.10 if all_y else 100
+
     fig = go.Figure()
 
-    # 1) Plan daily target (horizontal dashed line)
+    # 1) Plan daily target (dashed line)
     if plan_daily_val > 0:
-        fig.add_hline(
-            y=plan_daily_val,
-            line_dash="dash",
-            line_color=colors["line"],
-            line_width=1.5,
-            annotation_text=f"<b>Plan: {fmt(plan_daily_val)}</b>",
-            annotation_position="top left",
-            annotation_font=dict(size=12, color=colors["line"]),
+        fig.add_trace(
+            go.Scatter(
+                x=[-0.5, len(OP_HOURS) - 0.5],
+                y=[plan_daily_val, plan_daily_val],
+                mode="lines",
+                name="Plan (Target)",
+                line=dict(color=colors["line"], width=1, dash="dash"),
+                showlegend=True,
+                hoverinfo="skip"
+            )
+        )
+        # Annotation for the plan value
+        fig.add_annotation(
+            x=0, y=plan_daily_val,
+            xref="paper", yref="y",
+            text=f"<b>Plan: {fmt(plan_daily_val)}</b>",
+            showarrow=False,
+            font=dict(size=14, color=colors["line"], family="Rubik"),
+            bgcolor="rgba(255, 255, 255, 0.7)",
+            xanchor="left", yanchor="bottom"
         )
 
-    # 2) Actual area fill + line
+    # 2) Actual line
     if last_actual_idx >= 0:
         show = hourly_full.iloc[: last_actual_idx + 1].copy()
         total_actual = show["Cumm_Actual"].iloc[-1]
@@ -88,30 +122,12 @@ def build_cumm_chart(
             else:
                 hover_texts.append(f"{v:,.0f} at {h}")
 
-        # Gradient area fill
-        fig.add_trace(
-            go.Scatter(
-                x=show["Hour"],
-                y=show["Cumm_Actual"],
-                mode="none",
-                fill="tozeroy",
-                fillcolor=colors["fill"],
-                showlegend=False,
-                hoverinfo="skip",
-            )
-        )
-
-        # Main line with colored markers (neutral theme color for history)
+        # Main line with colored markers
         marker_colors = [colors["marker"]] * len(show)
-
-        # Generate text labels and their dynamic colors (green above target, red below)
-        text_labels = [f"<b>{v/1000:.1f}K</b>" for v in show["Cumm_Actual"]]
         text_colors = [
             CHART_COLORS["success"] if v >= plan_daily_val else CHART_COLORS["danger"]
             for v in show["Cumm_Actual"]
         ]
-
-        # Use numerical X-coordinates mapped to OP_HOURS index so we can plot precise fractional intersections
         x_coords = [OP_HOURS.index(h) for h in show["Hour"]]
 
         fig.add_trace(
@@ -119,19 +135,27 @@ def build_cumm_chart(
                 x=x_coords,
                 y=show["Cumm_Actual"],
                 customdata=hover_texts,
-                mode="lines+markers+text",
+                mode="lines+markers",
                 name="Actual",
-                text=text_labels,
-                textposition="top center",
-                textfont=dict(size=9, color=text_colors, family="Inter"),
-                line=dict(color=colors["line"], width=2.5, shape="spline"),
-                marker=dict(
-                    size=7, color=marker_colors,
-                    line=dict(color="#fff", width=1.5),
-                ),
+                line=dict(color=colors["line"], width=3, shape="spline", smoothing=1.3),
+                marker=dict(size=8, color=marker_colors, line=dict(color="#fff", width=2)),
                 hovertemplate="Actual<br><b>%{customdata}</b><extra></extra>",
             )
         )
+
+        # Labels for points
+        for i, row in show.iterrows():
+            idx = show.index.get_loc(i)
+            val = row["Cumm_Actual"]
+            fig.add_annotation(
+                x=x_coords[idx],
+                y=val,
+                text=f"<b>{val/1000:.1f}K</b>",
+                showarrow=False,
+                yshift=15,
+                font=dict(size=12, color=text_colors[idx], family="Rubik"),
+                opacity=0.9
+            )
 
         # Last point highlight
         last = show.iloc[-1]
@@ -148,101 +172,125 @@ def build_cumm_chart(
                 hoverinfo="skip",
             )
         )
-        # Vertical dashed line at the exact HOUR point where it first hits/crosses the target
-        intersect_x = None
-        y_vals = show["Cumm_Actual"].tolist()
-        for i in range(len(y_vals)):
-            if y_vals[i] >= plan_daily_val:
-                intersect_x = OP_HOURS.index(show.iloc[i]["Hour"])
-                break
-
-        if intersect_x is not None:
-            fig.add_shape(
-                type="line",
-                x0=intersect_x,
-                x1=intersect_x,
-                y0=0,
-                y1=plan_daily_val, # Touches exactly the target line
-                line=dict(color=CHART_COLORS["success"], width=1.5, dash="dash"),
-                layer="above" 
-            )
         
-        # (Manual data point annotations removed in favor of native scatter textposition)
-        # Summary annotation (above chart, right side)
-        summary_text = (
-            f"<span style='font-size:14px;color:{colors['marker']}'><b>{fmt(total_actual / 1000, 1)}K</b></span>  "
-            f"<span style='font-size:13px;color:#64748b;font-weight:600;'>Avg {fmt(avg_per_hour / 1000, 1)}K/hr · {hours_count}h</span>"
-        )
+        # Summary Header Figures
+        gap = total_actual - plan_daily_val
+        gap_color = CHART_COLORS["success"] if gap >= 0 else CHART_COLORS["danger"]
+        
+        summary_stats = [
+            {"label": "ACTUAL", "value": f"{total_actual/1000:.1f}K", "sub": "MT Hari Ini" if palette=="ch" else "BCM Hari Ini", "color": colors["marker"]},
+            {"label": "PLAN", "value": f"{plan_daily_val/1000:.1f}K", "sub": "MT Target" if palette=="ch" else "BCM Target", "color": "#1f2937"},
+            {"label": "GAP", "value": f"{gap/1000:+.1f}K", "sub": f"{(gap/plan_daily_val*100):.1f}% {'lead' if gap>=0 else 'miss'}" if plan_daily_val>0 else "", "color": gap_color},
+            {"label": "AVG RATE", "value": f"{avg_per_hour/1000:.1f}K", "sub": "MT / hr" if palette=="ch" else "BCM / hr", "color": "#1f2937"},
+        ]
+
+        # Top-Left Titles (Simplified)
         fig.add_annotation(
-            xref="paper", yref="paper",
-            x=0.98, y=1.12,  # Give a safe distance from mode icons
-            text=summary_text,
-            showarrow=False,
-            font=dict(family="Inter"),
-            align="right",
-            xanchor="right",
+            xref="paper", yref="paper", x=0, y=1.15,
+            text=f"<span style='font-size:18px;color:#1a1f36;font-weight:bold;'>{title}</span>",
+            showarrow=False, align="left", xanchor="left", yanchor="bottom"
         )
 
-    # Dynamic Y-axis range
-    all_y = []
-    if last_actual_idx >= 0:
-        all_y.append(hourly_full.iloc[:last_actual_idx + 1]["Cumm_Actual"].max())
-    if plan_daily_val > 0:
-        all_y.append(plan_daily_val)
-    # Revert multiplier to normal spacing (1.10) to avoid excessive gap at the top
-    y_max = max(all_y) * 1.10 if all_y else 100
+        # Add 4 column annotations (Right Side)
+        for i, stat in enumerate(summary_stats):
+            # Calculate x position (starting from right, moving left)
+            x_pos = 0.98 - (3 - i) * 0.14
+            
+            # Header Trace Label
+            fig.add_annotation(
+                xref="paper", yref="paper", x=x_pos, y=1.18,
+                text=f"<span style='font-size:10px;color:#64748b;font-weight:600;'>{stat['label']}</span>",
+                showarrow=False, align="center", xanchor="center", yanchor="bottom"
+            )
+            # Principal Value
+            fig.add_annotation(
+                xref="paper", yref="paper", x=x_pos, y=1.10,
+                text=f"<span style='font-size:16px;color:{stat['color']};font-weight:bold;'>{stat['value']}</span>",
+                showarrow=False, align="center", xanchor="center", yanchor="bottom"
+            )
+            # Sub-label
+            fig.add_annotation(
+                xref="paper", yref="paper", x=x_pos, y=1.02,
+                text=f"<span style='font-size:9px;color:#94a3b8;'>{stat['sub']}</span>",
+                showarrow=False, align="center", xanchor="center", yanchor="bottom"
+            )
 
-    # Layout
+    # --- Rain Bars Section ---
+    if rain_df is not None and not rain_df.empty:
+        rain_val_col = "Minute" if "Minute" in rain_df.columns else ("Duration" if "Duration" in rain_df.columns else None)
+        if rain_val_col:
+            rdf = rain_df.copy()
+            rdf[rain_val_col] = pd.to_numeric(rdf[rain_val_col], errors="coerce").fillna(0)
+            
+            if rain_val_col == "Duration":
+                rdf["RainVal"] = rdf[rain_val_col]
+                unit = "hrs"
+            else:
+                rdf["RainVal"] = rdf[rain_val_col] / 60 
+                unit = "hrs"
+            
+            rain_hourly = rdf.groupby("Hour LU")["RainVal"].sum().reset_index()
+            rain_hourly.columns = ["Hour", "RainVal"]
+            rain_full = pd.DataFrame({"Hour": OP_HOURS})
+            rain_full = rain_full.merge(rain_hourly, on="Hour", how="left").fillna(0)
+            rx_coords = list(range(len(OP_HOURS)))
+            
+            fig.add_trace(
+                go.Bar(
+                    x=rx_coords, y=rain_full["RainVal"], name="Rainfall",
+                    marker=dict(color="rgba(14, 165, 233, 0.4)", line=dict(color="rgba(14, 165, 233, 0.7)", width=1)),
+                    yaxis="y2",
+                    hovertemplate=f"Rain: <b>%{{y:.1f}} {unit}</b> at %{{x}}<extra></extra>",
+                    text=[f"<b>{v:.1f}h</b>" if v > 0 else "" for v in rain_full["RainVal"]],
+                    textposition="outside",
+                    textfont=dict(size=10, color="rgba(14, 165, 233, 1)", family="Rubik"),
+                )
+            )
+
     fig.update_layout(
-        title=dict(
-            text=f"<b>{title}</b>",
-            font=dict(size=14, family="Inter", color="#1a1f36"),
-            x=0.01, y=0.97,
-        ),
-        height=420,  # Increased height
+        height=550,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
+        uirevision="constant", # Prevents full redraw on data change
+        transition=dict(duration=500, easing="cubic-in-out"), # Smooth animation
         xaxis=dict(
-            tickmode="array",
-            tickvals=list(range(len(OP_HOURS))),
-            ticktext=OP_HOURS,
-            range=[-0.5, len(OP_HOURS) - 0.5], # Ensure full 24-hours is visible
-            showgrid=False,
-            linecolor="#e5e7eb",
-            linewidth=1,
-            tickfont=dict(size=11, color="#475569", family="Inter"),
-            tickangle=0,
+            tickmode="array", tickvals=list(range(len(OP_HOURS))), ticktext=OP_HOURS,
+            range=[-0.5, len(OP_HOURS) - 0.5], showgrid=False,
+            linecolor="#e5e7eb", linewidth=1,
+            tickfont=dict(size=11, color="#475569", family="Rubik"),
         ),
         yaxis=dict(
-            showgrid=True,
-            gridcolor="#f3f4f6",
-            gridwidth=1,
-            zeroline=False,
-            showline=False,
-            tickfont=dict(size=9, color="#9ca3af", family="Inter"),
-            range=[0, y_max],
+            showgrid=True, gridcolor="#f3f4f6", gridwidth=1,
+            zeroline=False, showline=False,
+            tickfont=dict(size=10, color="#9ca3af", family="Rubik"),
+            # RAISED LINE: start at negative to leave room for bars (reduced gap)
+            range=[-y_max * 0.25, y_max * 1.30],
+            title=dict(text=y_label, font=dict(size=11, color="#64748b")),
+        ),
+        yaxis2=dict(
+            title=dict(text="Rain (hrs)", font=dict(color="rgba(14, 165, 233, 1)", size=10)),
+            tickfont=dict(color="rgba(14, 165, 233, 1)", size=8),
+            anchor="x", overlaying="y", side="right",
+            # SCALE BARS: Tighter range brings them closer to the line
+            range=[0, 8], showgrid=False,
         ),
         legend=dict(
-            orientation="h", y=-0.15,
-            font=dict(size=10, color="#6b7280", family="Inter"),
+            orientation="h", y=-0.12,
+            font=dict(size=11, color="#6b7280", family="Rubik"),
             bgcolor="rgba(0,0,0,0)",
+            traceorder="normal",
         ),
-        margin=dict(t=50, b=40, r=16, l=40),
-        font=dict(family="Inter"),
-        hoverlabel=dict(
-            bgcolor="#ffffff",
-            font=dict(color="#111827", size=12, family="Inter"),
-            bordercolor="#e5e7eb",
-        ),
+        margin=dict(t=110, b=45, r=45, l=50),
+        font=dict(family="Rubik"),
     )
     return fig
 
 
 def render_production_charts(
-    ob_f, ch_f, cumm_pit, plan_ob_val: float, plan_ch_val: float
+    ob_f, ch_f, cumm_pit, plan_ob_val: float, plan_ch_val: float, rain_f: pd.DataFrame = None
 ):
     """Render OB and CH cumulative charts side-by-side."""
-    st.markdown('<div style="height:6px;"></div>', unsafe_allow_html=True)
+    st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
 
     col_ob, col_ch = st.columns(2, gap="small")
 
@@ -251,13 +299,15 @@ def render_production_charts(
             ob_f, "Volume", "Cumm OB", plan_ob_val,
             "Cumulative OB Production", "BCM",
             cumm_pit, palette="ob",
+            rain_df=rain_f
         )
         st.plotly_chart(fig_ob, width="stretch")
 
     with col_ch:
         fig_ch = build_cumm_chart(
-            ch_f, "Netto", "Cumm CH", plan_ch_val,
+            ch_f, "Volume", "Cumm CH", plan_ch_val,
             "Cumulative Coal Hauling", "MT",
-            cumm_pit, convert_kg=True, palette="ch",
+            cumm_pit, convert_kg=False, palette="ch",
+            rain_df=rain_f
         )
         st.plotly_chart(fig_ch, width="stretch")

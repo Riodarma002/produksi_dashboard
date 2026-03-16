@@ -1,0 +1,356 @@
+================================================================================
+DOWNLOAD FILE BARU (ACTUAL)
+================================================================================
+
+[*] Downloading from: https://mgeid-my.sharepoint.com/:x:/g/personal/planning_depa...
+[+] Download success! Size: 2,430,415 bytes
+
+================================================================================
+MEMBACA STRUKTUR FILE
+================================================================================
+
+[INFO] Total Sheets: 15
+
+Sheet Names:
+  1. Rain
+  2. Vol OB GPE Selatan
+  3. Vol OB GPE Utara
+  4. Vol OB MGE
+  5. LT OB MGE
+  6. Vol OB BDE
+  7. LT OB BDE
+  8. Vol Hauling North
+  9. Vol Hauling South
+  10. Vol Transit North
+  11. Coal Hauling ROM
+  12. Cumm Vol
+  13. db
+  14. LU Hour
+  15. LU PIT
+
+================================================================================
+DETAIL SHEET & KOLOM
+================================================================================
+
+================================================================================
+SHEET: Rain
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 9 columns
+
+[INFO] Columns (9):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hour                                     | object       | Sample: 07-08, 08-09, 09-10
+   4. Duration                                 | int64        | Sample: 0, 0, 0
+   5. PIT                                      | object       | Sample: South JO IC, South JO IC, South JO IC
+   6. Hour Fix                                 | object       | Sample: 07:00:00, 08:00:00, 09:00:00
+   7. Shift Fix                                | object       | Sample: Day, Day, Day
+   8. PIT Fix                                  | object       | Sample: South JO IC, South JO IC, South JO IC
+   9. Hour LU                                  | int64        | Sample: 7, 8, 9
+
+================================================================================
+SHEET: Vol OB GPE Selatan
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 9 columns
+
+[INFO] Columns (9):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hour                                     | object       | Sample: 07-08, 08-09, 09-10
+   4. Volume                                   | float64      | Sample: 2490.5, 3063.0, 2931.0
+   5. PIT                                      | object       | Sample: South JO IC, South JO IC, South JO IC
+   6. Hour Fix                                 | object       | Sample: 07:00:00, 08:00:00, 09:00:00
+   7. Shift Fix                                | object       | Sample: Day, Day, Day
+   8. PIT Fix                                  | object       | Sample: South JO IC, South JO IC, South JO IC
+   9. Hour LU                                  | int64        | Sample: 7, 8, 9
+
+================================================================================
+SHEET: Vol OB GPE Utara
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 9 columns
+
+[INFO] Columns (9):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hour                                     | object       | Sample: 07-08, 08-09, 09-10
+   4. Volume                                   | int64        | Sample: 0, 1020, 1100
+   5. PIT                                      | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+   6. Hour Fix                                 | object       | Sample: 07:00:00, 08:00:00, 09:00:00
+   7. Shift Fix                                | object       | Sample: Day, Day, Day
+   8. PIT Fix                                  | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+   9. Hour LU                                  | int64        | Sample: 7, 8, 9
+
+================================================================================
+SHEET: Vol OB MGE
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 16 columns
+
+[INFO] Columns (16):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Loader                                   | object       | Sample: GEX 502, GEX 502, GEX 502
+   4. Hauler                                   | object       | Sample: GMT 702, MDT 66, MDT 67
+   5. Hour                                     | object       | Sample: 07-08, 07-08, 07-08
+   6. RIT                                      | int64        | Sample: 1, 1, 1
+   7. Volume                                   | int64        | Sample: 10, 10, 10
+   8. Distance                                 | int64        | Sample: 3500, 3500, 3500
+   9. PIT                                      | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+  10. Owner                                    | object       | Sample: MGE, MGE, MGE
+  11. Status                                   | object       | Sample: Core, Core, Core
+  12. Material                                 | object       | Sample: OB, OB, OB
+  13. Hour Fix                                 | object       | Sample: 07:00:00, 07:00:00, 07:00:00
+  14. Shift Fix                                | object       | Sample: Day, Day, Day
+  15. PIT Fix                                  | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+  16. Hour LU                                  | int64        | Sample: 7, 7, 7
+
+================================================================================
+SHEET: LT OB MGE
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 13 columns
+
+[INFO] Columns (13):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Loader                                   | object       | Sample: GEX 502, GEX 502, GEX 502
+   4. Losstime                                 | object       | Sample: Loading OB (Minute), P2H, Waiting Operator
+   5. Start                                    | object       | Sample: 07:00:00, 07:00:00, 07:00:00
+   6. Stop                                     | object       | Sample: 08:00:00, 08:00:00, 08:00:00
+   7. PIT                                      | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+   8. Owner                                    | object       | Sample: MGE, MGE, MGE
+   9. Duration                                 | int64        | Sample: 11, 10, 30
+  10. Hour                                     | object       | Sample: 07-08, 07-08, 07-08
+  11. Hour Fix                                 | object       | Sample: 07:00:00, 07:00:00, 07:00:00
+  12. Shift Fix                                | object       | Sample: Day, Day, Day
+  13. Hour LU                                  | int64        | Sample: 7, 7, 7
+
+================================================================================
+SHEET: Vol OB BDE
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 23 columns
+
+[INFO] Columns (23):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: DS, DS, DS
+   3. Hour                                     | object       | Sample: 06 - 07, 06 - 07, 06 - 07
+   4. M'LY                                     | int64        | Sample: 1001, 1001, 1001
+   5. DWO                                      | int64        | Sample: 1001, 1001, 1001
+   6. Loader                                   | object       | Sample: EXK3003, EXK3003, EXK3003
+   7. EGI Loader                               | object       | Sample: PC1250SP-8, PC1250SP-8, PC1250SP-8
+   8. Hauler                                   | object       | Sample: HDK5018, HDK5019, HDK5020
+   9. EGI Hauler                               | object       | Sample: HD785-7, HD785-7, HD785-7
+  10. OPT Loader                               | object       | Sample: MARTEN SOMA, MARTEN SOMA, MARTEN SOMA
+  11. OPT Hauler                               | object       | Sample: MARKUS TAGE, CENLY KUMASEH, ASKAR
+  12. SITE                                     | object       | Sample: INDEXIM, INDEXIM, INDEXIM
+  13. LOKASI                                   | object       | Sample: INDEXIM, INDEXIM, INDEXIM
+  14. PIT                                      | object       | Sample: PIT JO, PIT JO, PIT JO
+  15. Distance                                 | int64        | Sample: 4800, 4800, 4800
+  16. SUB MATERIAL                             | object       | Sample: OVERBURDEN - CLAY, OVERBURDEN - CLAY, OVERBURDEN - CLAY
+  17. RIT                                      | int64        | Sample: 1, 1, 1
+  18. Volume                                   | int64        | Sample: 42, 42, 42
+  19. LU                                       | object       | Sample: Day0.25EXK3003, Day0.25EXK3003, Day0.25EXK3003
+  20. Hour Fix                                 | object       | Sample: 06:00:00, 06:00:00, 06:00:00
+  21. Shift Fix                                | object       | Sample: Day, Day, Day
+  22. PIT Fix                                  | object       | Sample: North JO IC, North JO IC, North JO IC
+  23. Hour LU                                  | int64        | Sample: 6, 6, 6
+
+================================================================================
+SHEET: LT OB BDE
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 16 columns
+
+[INFO] Columns (16):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: DS, DS, DS
+   3. Hour                                     | object       | Sample: 06 - 07, 06 - 07, 06 - 07
+   4. M'LY                                     | int64        | Sample: 1001, 1001, 1002
+   5. DWO                                      | int64        | Sample: 1001, 1001, 1002
+   6. Loader                                   | object       | Sample: EXK3003, EXK3003, EXK3004
+   7. EGI Loader                               | object       | Sample: EX-1250, EX-1250, EX-1250
+   8. Status                                   | object       | Sample: OB, BD, BD
+   9. Losstime                                 | object       | Sample: LOADING OVERBURDEN, UNSCHEDULE MAINTENAN, UNSCHEDULE MAINTENAN
+  10. Start                                    | object       | Sample: 06:30:00, 06:58:00, 06:30:00
+  11. Stop                                     | object       | Sample: 06:58:00, 07:00:00, 06:45:00
+  12. Duration                                 | float64      | Sample: 0.46666666666666634, 0.033333333333333215, 0.25000000000000044
+  13. Hour Fix                                 | object       | Sample: 06:00:00, 06:00:00, 06:00:00
+  14. Shift Fix                                | object       | Sample: Day, Day, Day
+  15. PIT Fix                                  | object       | Sample: North JO IC, North JO IC, North JO IC
+  16. Hour LU                                  | int64        | Sample: 6, 6, 6
+
+================================================================================
+SHEET: Vol Hauling North
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 14 columns
+
+[INFO] Columns (14):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: DAY, DAY, DAY
+   3. Hauler                                   | object       | Sample: GHT 703, GHT 704, GHT 709
+   4. Loader                                   | object       | Sample: GEX 501, GEX 501, EX SMP 91
+   5. Seam                                     | object       | Sample: N-70, N-70, N-80
+   6. Product                                  | object       | Sample: LJO-A, LJO-A, LJO-B SB
+   7. Hour                                     | object       | Sample: 06:51:00, 06:44:00, 06:41:00
+   8. Volume                                   | float64      | Sample: 37.0, 38.6, 39.3
+   9. Hour Fix                                 | object       | Sample: 06:00:00, 06:00:00, 06:00:00
+  10. Shift Fix                                | object       | Sample: Day, Day, Day
+  11. PIT Fix                                  | object       | Sample: North JO IC, North JO IC, North JO IC
+  12. Product Fix                              | object       | Sample: LJO-A, LJO-A, LJO-B SB
+  13. Hour LU                                  | int64        | Sample: 6, 6, 6
+  14. Source                                   | object       | Sample: PIT, PIT, PIT
+
+================================================================================
+SHEET: Vol Hauling South
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 8 rows x 30 columns
+
+[INFO] Columns (30):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Hour                                     | object       | Sample: 08:31:00, 08:44:00, 08:56:00
+   3. Date in                                  | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   4. Time In                                  | object       | Sample: 08:31:00, 08:44:00, 08:56:00
+   5. Date Out                                 | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   6. Time Out                                 | object       | Sample: 08:36:00, 08:52:00, 09:06:00
+   7. Hauler                                   | object       | Sample: GHT 728, GHT 742, GHT 744
+   8. Gross                                    | int64        | Sample: 64260, 70120, 64360
+   9. Tare                                     | int64        | Sample: 20180, 23820, 23740
+  10. Netto                                    | int64        | Sample: 44080, 46300, 40620
+  11. Operator                                 | object       | Sample: ADMIN TIMBANGAN CP33, ADMIN TIMBANGAN CP33, ADMIN TIMBANGAN CP33
+  12. Product                                  | object       | Sample: HS HCv, HS HCv, HS HCv
+  13. PIT                                      | object       | Sample: PIT JO SELATAN, PIT JO SELATAN, PIT JO SELATAN
+  14. Blok                                     | int64        | Sample: 0, 0, 0
+  15. Seam                                     | object       | Sample: 35A, 35A, 35A
+  16. Loader                                   | object       | Sample: EX37, EX37, EX37
+  17. Material                                 | object       | Sample: COALRAW, COALRAW, COALRAW
+  18. Lokasi                                   | object       | Sample: PIT, PIT, PIT
+  19. ID Timbangan                             | int64        | Sample: 2, 2, 2
+  20. Status                                   | object       | Sample: TIMBANG 1x, TIMBANG 1x, TIMBANG 1x
+  21. Kontraktor                               | object       | Sample: Mega Global Energy, Mega Global Energy, Mega Global Energy
+  22. SubKontraktor                            | object       | Sample: Mega Global Energy, Mega Global Energy, Mega Global Energy
+  23. Dumping                                  | object       | Sample: HOPPER A, HOPPER A, HOPPER A
+  24. Shift                                    | object       | Sample: S01, S01, S01
+  25. Hour Fix                                 | object       | Sample: 08:00:00, 08:00:00, 08:00:00
+  26. Shift Fix                                | object       | Sample: Day, Day, Day
+  27. PIT Fix                                  | object       | Sample: South JO IC, South JO IC, South JO IC
+  28. Product Fix                              | object       | Sample: HS, HS, HS
+  29. Hour LU                                  | int64        | Sample: 8, 8, 8
+  30. Volume                                   | float64      | Sample: 44.08, 46.3, 40.62
+
+================================================================================
+SHEET: Vol Transit North
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 17 columns
+
+[INFO] Columns (17):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hauler                                   | object       | Sample: GMT 722, GMT 725, GMT 727
+   4. Product                                  | object       | Sample: LJO-A, LJO-A, LJO-A
+   5. PIT                                      | object       | Sample: NORTH JO IC, NORTH JO IC, NORTH JO IC
+   6. Hour                                     | object       | Sample: 07:00:00, 07:00:00, 07:00:00
+   7. RIT                                      | int64        | Sample: 1, 1, 1
+   8. Loader                                   | object       | Sample: EX SMP 82, EX SMP 82, EX SMP 82
+   9. PLM                                      | float64      | Sample: 14.8, 14.8, 14.8
+  10. Volume                                   | float64      | Sample: 14.8, 14.8, 14.8
+  11. Owner                                    | object       | Sample: MGE, MGE, MGE
+  12. Seam                                     | object       | Sample: N-55U1, N-55U1, N-55U1
+  13. Hour Fix                                 | object       | Sample: 07:00:00, 07:00:00, 07:00:00
+  14. Shift Fix                                | object       | Sample: Day, Day, Day
+  15. PIT Fix                                  | object       | Sample: North JO IC, North JO IC, North JO IC
+  16. Product Fix                              | object       | Sample: LJO-A, LJO-A, LJO-A
+  17. Hour LU                                  | int64        | Sample: 7, 7, 7
+
+================================================================================
+SHEET: Coal Hauling ROM
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 13 columns
+
+[INFO] Columns (13):
+   1. Date                                     | datetime64[ns] | Sample: 2026-03-12 00:00:00, 2026-03-12 00:00:00, 2026-03-12 00:00:00
+   2. Shift                                    | object       | Sample: DAY, DAY, DAY
+   3. Hauler                                   | object       | Sample: KAI PMVV 127, KAI PMVV 128, KAI PMVV 091
+   4. Loader                                   | object       | Sample: WA GAM 04, WA GAM 04, WA GAM 04
+   5. Seam                                     | object       | Sample: N-STOCKROOM-60, N-STOCKROOM-60, N-STOCKROOM-60
+   6. Product                                  | object       | Sample: LJO-A SB, LJO-A SB, LJO-A SB
+   7. Hour                                     | object       | Sample: 06:45:00, 06:32:00, 06:55:00
+   8. Volume                                   | float64      | Sample: 145.5, 146.75, 146.1
+   9. Hour Fix                                 | object       | Sample: 06:00:00, 06:00:00, 06:00:00
+  10. Shift Fix                                | object       | Sample: Day, Day, Day
+  11. PIT Fix                                  | object       | Sample: North JO IC, North JO IC, North JO IC
+  12. Product Fix                              | object       | Sample: LJO-A SB, LJO-A SB, LJO-A SB
+  13. Hour LU                                  | int64        | Sample: 6, 6, 6
+
+================================================================================
+SHEET: Cumm Vol
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 8 columns
+
+[INFO] Columns (8):
+   1. Hour LU                                  | int64        | Sample: 6, 7, 8
+   2. PIT                                      | object       | Sample: North JO IC, North JO IC, North JO IC
+   3. Volume OB                                | int64        | Sample: 1688, 3480, 3492
+   4. Cumm OB                                  | int64        | Sample: 1688, 5168, 8660
+   5. Volume CH                                | float64      | Sample: 948.0500000000001, 569.5500000000001, 1374.05
+   6. Cumm CH                                  | float64      | Sample: 948.0500000000001, 1517.6000000000001, 2891.65
+   7. Volume CT                                | float64      | Sample: 0.0, 88.8, 243.48000000000008
+   8. Cumm CT                                  | float64      | Sample: 0.0, 88.8, 332.2800000000001
+
+================================================================================
+SHEET: db
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 18 columns
+
+[INFO] Columns (18):
+   1. No                                       | int64        | Sample: 1, 2, 3
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hour                                     | object       | Sample: 06-07, 07-08, 08-09
+   4. Start                                    | object       | Sample: 06:00:00, 07:00:00, 08:00:00
+   5. Stop                                     | object       | Sample: 07:00:00, 08:00:00, 09:00:00
+   6. Hour FIX                                 | object       | Sample: 06-07, 07-08, 08-09
+   7. Hour Num                                 | int64        | Sample: 6, 7, 8
+   8. LU1                                      | object       | Sample: Day06-07, Day07-08, Day08-09
+   9. LU2                                      | object       | Sample: Day0.25, Day0.291666666666667, Day0.333333333333333
+  10. Hour LU                                  | int64        | Sample: 6, 7, 8
+  11. Unnamed: 10                              | float64      | Sample: 
+  12. Product                                  | object       | Sample: HU (HUL) JO SB, LU JO, HU (HUL) JO
+  13. PIT                                      | object       | Sample: North JO GAM, North JO GAM, North JO GAM
+  14. Unnamed: 13                              | float64      | Sample: 
+  15. Unnamed: 14                              | float64      | Sample: 
+  16. Date Report                              | float64      | Sample: 
+  17. 40 | float64      | Sample: 
+  18.                                        2 | float64      | Sample: 
+
+================================================================================
+SHEET: LU Hour
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 10 rows x 3 columns
+
+[INFO] Columns (3):
+   1. Hour                                     | object       | Sample: 06:00:00, 07:00:00, 08:00:00
+   2. Shift                                    | object       | Sample: Day, Day, Day
+   3. Hour LU                                  | int64        | Sample: 6, 7, 8
+
+================================================================================
+SHEET: LU PIT
+================================================================================
+
+[INFO] Dimensions (first 10 rows): 4 rows x 1 columns
+
+[INFO] Columns (1):
+   1. PIT                                      | object       | Sample: North JO GAM, South JO GAM, South JO IC
+
+================================================================================
+ANALISA SELESAI
+================================================================================

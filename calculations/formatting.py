@@ -6,7 +6,11 @@ import pandas as pd
 
 def fmt(val, decimals=0) -> str:
     """Format number: 1.234,56 (Indonesian locale — dot=thousands, comma=decimal)."""
-    s = f"{val:,.{decimals}f}"
+    try:
+        val_float = float(val)
+    except (ValueError, TypeError):
+        val_float = 0.0
+    s = f"{val_float:,.{decimals}f}"
     return s.replace(",", "@").replace(".", ",").replace("@", ".")
 
 

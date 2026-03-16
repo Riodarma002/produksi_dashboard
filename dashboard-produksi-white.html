@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Produksi — South JO IC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --white: #ffffff;
+  --bg: #f7f7f5;
+  --surface: #ffffff;
+  --border: #e8e8e4;
+  --border-strong: #d0d0ca;
+
+  --ink: #1a1a18;
+  --ink-2: #3d3d38;
+  --ink-3: #767670;
+  --ink-4: #b0b0aa;
+  --ink-5: #dcdcd8;
+
+  --blue: #1d4ed8;
+  --blue-light: #eff3ff;
+  --blue-mid: #bfccf8;
+
+  --red: #dc2626;
+  --red-light: #fef2f2;
+  --red-mid: #fecaca;
+
+  --green: #16a34a;
+  --green-light: #f0fdf4;
+  --green-mid: #bbf7d0;
+
+  --amber: #d97706;
+  --amber-light: #fffbeb;
+  --amber-mid: #fde68a;
+
+  --coal: #334155;
+  --coal-light: #f1f5f9;
+
+  --serif: 'Instrument Serif', Georgia, serif;
+  --sans: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+
+  --r: 8px;
+  --r-sm: 5px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow: 0 4px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── TOPBAR ────────────────────────────── */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.topbar-left { display: flex; align-items: center; gap: 20px; }
+
+.wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.wordmark-title {
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.wordmark-area {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  background: var(--bg);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}
+
+.sep { width: 1px; height: 22px; background: var(--border-strong); }
+
+.tabs {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.tab {
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ink-3);
+  cursor: pointer;
+  border-right: 1px solid var(--border);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.tab:last-child { border-right: none; }
+.tab:hover { background: var(--bg); color: var(--ink); }
+.tab.active {
+  background: var(--coal);
+  color: #fff;
+  font-weight: 600;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.date-range {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+  background: var(--white);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.date-range:hover { border-color: var(--border-strong); }
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--green);
+  font-weight: 600;
+  font-family: var(--mono);
+}
+
+.live-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+.btn-play {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--coal);
+  color: #fff;
+  border: none;
+  border-radius: var(--r-sm);
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--sans);
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  transition: background 0.15s;
+}
+.btn-play:hover { background: #1e293b; }
+.btn-play svg { width: 10px; height: 10px; fill: #fff; }
+
+.update-time {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+}
+
+/* ─── MAIN ──────────────────────────────── */
+.main { padding: 22px 28px; display: flex; flex-direction: column; gap: 14px; }
+
+/* ─── KPI CARDS ─────────────────────────── */
+.kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 22px 24px 20px;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+  animation: rise 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.kpi-card:nth-child(2) { animation-delay: 0.07s; }
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Left accent stripe */
+.kpi-card::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 16px; bottom: 16px;
+  width: 3px;
+  border-radius: 0 2px 2px 0;
+}
+
+.kpi-card.danger::after { background: var(--red); }
+.kpi-card.warn::after   { background: var(--amber); }
+.kpi-card.ok::after     { background: var(--green); }
+
+.kpi-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+
+.kpi-meta { display: flex; flex-direction: column; gap: 1px; }
+
+.kpi-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.kpi-subtitle { font-size: 11px; color: var(--ink-4); font-family: var(--mono); }
+
+.kpi-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.kpi-status.danger { background: var(--red-light); color: var(--red); border: 1px solid var(--red-mid); }
+.kpi-status.warn   { background: var(--amber-light); color: var(--amber); border: 1px solid var(--amber-mid); }
+.kpi-status.ok     { background: var(--green-light); color: var(--green); border: 1px solid var(--green-mid); }
+
+/* Big number */
+.kpi-num-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.kpi-num {
+  font-family: var(--serif);
+  font-size: 52px;
+  color: var(--ink);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.kpi-num-unit {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink-3);
+  margin-bottom: 6px;
+  font-weight: 400;
+}
+
+/* Progress */
+.prog-section { display: flex; flex-direction: column; gap: 6px; }
+
+.prog-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.prog-label { font-size: 11px; color: var(--ink-3); font-weight: 500; }
+
+.prog-pct {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-3);
+}
+
+.prog-target-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink-4);
+}
+
+.track {
+  height: 5px;
+  background: var(--ink-5);
+  border-radius: 99px;
+  position: relative;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 99px;
+  position: relative;
+  transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.fill.danger { background: var(--red); }
+.fill.warn   { background: var(--amber); }
+.fill.ok     { background: var(--green); }
+
+.prog-numbers {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+}
+
+/* ─── SEC CARDS ─────────────────────────── */
+.sec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+.sec-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  animation: rise 0.5s cubic-bezier(0.22,1,0.36,1) both;
+}
+
+.sec-card:nth-child(2) { animation-delay: 0.06s; }
+.sec-card:nth-child(3) { animation-delay: 0.12s; }
+
+.sec-icon-wrap {
+  width: 38px; height: 38px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+  background: var(--bg);
+}
+
+.sec-info { flex: 1; min-width: 0; }
+
+.sec-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+
+.sec-val {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.sec-unit {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--ink-4);
+  margin-left: 3px;
+}
+
+/* ─── CHART SECTION ─────────────────────── */
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px 22px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: rise 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  animation-delay: 0.1s;
+}
+
+.chart-card:nth-child(2) { animation-delay: 0.17s; }
+
+.chart-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+
+.chart-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.leg-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-3); }
+
+.leg-line {
+  width: 16px;
+  height: 2px;
+  border-radius: 2px;
+}
+
+.leg-line.dashed {
+  background: none;
+  border-top: 2px dashed var(--ink-4);
+  height: 0;
+}
+
+/* Stat grid inside chart */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.stat-box {
+  padding: 8px 10px;
+  border-right: 1px solid var(--border);
+  background: var(--white);
+}
+.stat-box:last-child { border-right: none; }
+
+.stat-lbl {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--ink-4);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 3px;
+}
+
+.stat-val {
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stat-hint {
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--ink-4);
+  margin-top: 2px;
+}
+
+.cv-blue   { color: var(--blue); }
+.cv-coal   { color: var(--coal); }
+.cv-red    { color: var(--red); }
+.cv-green  { color: var(--green); }
+.cv-amber  { color: var(--amber); }
+.cv-ink2   { color: var(--ink-2); }
+
+.chart-wrap { position: relative; height: 210px; }
+
+/* ─── DIVIDER RULE ──────────────────────── */
+hr.rule { border: none; border-top: 1px solid var(--border); }
+
+/* ─── FOOTER ────────────────────────────── */
+.footer {
+  padding: 14px 28px 22px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--ink-4);
+}
+</style>
+</head>
+<body>
+
+<!-- ── TOPBAR ── -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div class="wordmark">
+      <span class="wordmark-title">Dashboard Produksi</span>
+      <span class="wordmark-area">South JO IC</span>
+    </div>
+    <div class="sep"></div>
+    <div class="tabs">
+      <div class="tab">North JO IC</div>
+      <div class="tab">North JO GAM</div>
+      <div class="tab active">South JO IC</div>
+      <div class="tab">South JO GAM</div>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+    <span class="update-time">Update: 15/03/26 · 05:00 WIB</span>
+    <div class="date-range">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      15 Mar 2026
+    </div>
+    <button class="btn-play">
+      <svg viewBox="0 0 10 10"><polygon points="2,1 9,5 2,9"/></svg>
+      Play
+    </button>
+  </div>
+</header>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+
+    <div class="kpi-card danger">
+      <div class="kpi-top">
+        <div class="kpi-meta">
+          <span class="kpi-name">Overburden</span>
+          <span class="kpi-subtitle">BCM · Hari ini</span>
+        </div>
+        <div class="kpi-status danger">▼ 41,2% dari target</div>
+      </div>
+      <div class="kpi-num-row">
+        <span class="kpi-num">17.828</span>
+        <span class="kpi-num-unit">BCM</span>
+      </div>
+      <div class="prog-section">
+        <div class="prog-meta">
+          <span class="prog-label">Progress harian</span>
+          <span class="prog-pct">58,8% tercapai</span>
+        </div>
+        <div class="track">
+          <div class="fill danger" style="width:58.8%"></div>
+        </div>
+        <div class="prog-numbers">
+          <span>0</span>
+          <span>Target: 30.342 BCM</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-card danger">
+      <div class="kpi-top">
+        <div class="kpi-meta">
+          <span class="kpi-name">Coal Hauling</span>
+          <span class="kpi-subtitle">MT · Hari ini</span>
+        </div>
+        <div class="kpi-status danger">▼ 31,7% dari target</div>
+      </div>
+      <div class="kpi-num-row">
+        <span class="kpi-num">3.006</span>
+        <span class="kpi-num-unit">MT</span>
+      </div>
+      <div class="prog-section">
+        <div class="prog-meta">
+          <span class="prog-label">Progress harian</span>
+          <span class="prog-pct">68,3% tercapai</span>
+        </div>
+        <div class="track">
+          <div class="fill danger" style="width:68.3%"></div>
+        </div>
+        <div class="prog-numbers">
+          <span>0</span>
+          <span>Target: 4.399 MT</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECONDARY -->
+  <div class="sec-grid">
+    <div class="sec-card">
+      <div class="sec-icon-wrap">⇅</div>
+      <div class="sec-info">
+        <div class="sec-label">Stripping Ratio</div>
+        <div class="sec-val">5,93<span class="sec-unit">BCM/MT</span></div>
+      </div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon-wrap">⊞</div>
+      <div class="sec-info">
+        <div class="sec-label">Stock ROM</div>
+        <div class="sec-val">194.675<span class="sec-unit">MT</span></div>
+      </div>
+    </div>
+    <div class="sec-card">
+      <div class="sec-icon-wrap">⊟</div>
+      <div class="sec-info">
+        <div class="sec-label">Stock Port</div>
+        <div class="sec-val">160.028<span class="sec-unit">MT</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-grid">
+
+    <!-- OB Chart -->
+    <div class="chart-card">
+      <div class="chart-top">
+        <div>
+          <div class="chart-name">Cumulative OB Production</div>
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-line dashed"></div><span>Plan target</span></div>
+            <div class="leg-item"><div class="leg-line" style="background:#334155"></div><span>Aktual</span></div>
+            <div class="leg-item"><div class="leg-line" style="background:#93c5fd"></div><span>Rainfall</span></div>
+          </div>
+        </div>
+        <div class="stat-strip">
+          <div class="stat-box">
+            <div class="stat-lbl">Aktual</div>
+            <div class="stat-val cv-coal">17.8K</div>
+            <div class="stat-hint">BCM hari ini</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Plan</div>
+            <div class="stat-val cv-ink2">30.3K</div>
+            <div class="stat-hint">BCM target</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Gap</div>
+            <div class="stat-val cv-red">−12.5K</div>
+            <div class="stat-hint">−41.2% miss</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Avg Rate</div>
+            <div class="stat-val cv-green">2.2K</div>
+            <div class="stat-hint">BCM/hr</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="obChart"></canvas></div>
+    </div>
+
+    <!-- Coal Chart -->
+    <div class="chart-card">
+      <div class="chart-top">
+        <div>
+          <div class="chart-name">Cumulative Coal Hauling</div>
+          <div class="chart-legend">
+            <div class="leg-item"><div class="leg-line dashed"></div><span>Plan target</span></div>
+            <div class="leg-item"><div class="leg-line" style="background:#16a34a"></div><span>Aktual</span></div>
+            <div class="leg-item"><div class="leg-line" style="background:#93c5fd"></div><span>Rainfall</span></div>
+          </div>
+        </div>
+        <div class="stat-strip">
+          <div class="stat-box">
+            <div class="stat-lbl">Aktual</div>
+            <div class="stat-val cv-green">3.0K</div>
+            <div class="stat-hint">MT hari ini</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Plan</div>
+            <div class="stat-val cv-ink2">4.4K</div>
+            <div class="stat-hint">MT target</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Gap</div>
+            <div class="stat-val cv-red">−1.4K</div>
+            <div class="stat-hint">−51.7% miss</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-lbl">Avg Rate</div>
+            <div class="stat-val cv-green">0.3K</div>
+            <div class="stat-hint">MT/hr</div>
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap"><canvas id="coalChart"></canvas></div>
+    </div>
+
+  </div>
+
+</main>
+
+<footer class="footer">
+  <span>Dashboard Produksi · South JO IC</span>
+  <span>Data per 15 Maret 2026, 05:00 WIB</span>
+</footer>
+
+<script>
+const labels = ['06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23','00','01','02','03','04','05'];
+
+const obActual = [0,1.6,3.6,6.0,8.4,10.7,10.7,13.0,15.6,17.8,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+const obPlan   = [2.7,4.9,7.3,10.0,12.5,15.3,17.8,20.3,23.2,25.9,27.8,29.0,30.3,null,null,null,null,null,null,null,null,null,null,null];
+const obRain   = [0,0.7,0.8,1.3,1.5,1.7,1.7,2.0,2.5,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null];
+const coalActual = [0.2,0.6,0.9,1.2,1.5,1.8,1.8,2.1,2.5,2.7,3.0,null,null,null,null,null,null,null,null,null,null,null,null,null];
+const coalPlan   = [0.4,0.8,1.2,1.6,2.0,2.4,2.8,3.2,3.6,4.0,4.4,null,null,null,null,null,null,null,null,null,null,null,null,null];
+const coalRain   = obRain;
+
+const tooltipDefaults = {
+  backgroundColor: '#ffffff',
+  borderColor: '#e8e8e4',
+  borderWidth: 1,
+  titleColor: '#767670',
+  bodyColor: '#1a1a18',
+  padding: 10,
+  cornerRadius: 6,
+  boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+  titleFont: { family: "'IBM Plex Mono', monospace", size: 11 },
+  bodyFont:  { family: "'IBM Plex Mono', monospace", size: 12 },
+};
+
+const scaleDefaults = (maxY) => ({
+  x: {
+    grid: { color: '#f0f0ec', drawTicks: false },
+    ticks: {
+      color: '#b0b0aa',
+      font: { family: "'IBM Plex Mono', monospace", size: 10 },
+      maxRotation: 0, padding: 6
+    },
+    border: { color: '#e8e8e4' }
+  },
+  y: {
+    position: 'left',
+    grid: { color: '#f4f4f0', drawTicks: false },
+    ticks: {
+      color: '#b0b0aa',
+      font: { family: "'IBM Plex Mono', monospace", size: 10 },
+      padding: 8,
+      callback: v => v + 'K'
+    },
+    border: { color: 'transparent' },
+    max: maxY
+  },
+  yRain: {
+    position: 'right',
+    grid: { display: false },
+    ticks: {
+      color: '#c7dffe',
+      font: { family: "'IBM Plex Mono', monospace", size: 10 },
+      padding: 8
+    },
+    border: { color: 'transparent' },
+    max: 12
+  }
+});
+
+function makeChart(id, actualData, planData, rainData, actualColor, maxY) {
+  return new Chart(document.getElementById(id), {
+    data: {
+      labels,
+      datasets: [
+        {
+          type: 'bar',
+          label: 'Rainfall',
+          data: rainData,
+          backgroundColor: 'rgba(147,197,253,0.35)',
+          borderColor: 'rgba(147,197,253,0.6)',
+          borderWidth: 1,
+          borderRadius: 2,
+          yAxisID: 'yRain',
+          order: 3
+        },
+        {
+          type: 'line',
+          label: 'Plan',
+          data: planData,
+          borderColor: '#c8c8c2',
+          borderWidth: 1.5,
+          borderDash: [5,4],
+          pointRadius: 0,
+          tension: 0.35,
+          yAxisID: 'y',
+          order: 2
+        },
+        {
+          type: 'line',
+          label: 'Aktual',
+          data: actualData,
+          borderColor: actualColor,
+          borderWidth: 2,
+          pointRadius: ctx => ctx.dataIndex === actualData.filter(v=>v!==null).length - 1 ? 6 : 0,
+          pointBackgroundColor: actualColor,
+          pointBorderColor: '#ffffff',
+          pointBorderWidth: 2,
+          tension: 0.35,
+          fill: { target: 'origin', above: actualColor + '14' },
+          yAxisID: 'y',
+          order: 1,
+          spanGaps: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: { legend: { display: false }, tooltip: tooltipDefaults },
+      scales: scaleDefaults(maxY)
+    }
+  });
+}
+
+makeChart('obChart',   obActual,   obPlan,   obRain,   '#334155', 35);
+makeChart('coalChart', coalActual, coalPlan, coalRain, '#16a34a', 5.5);
+</script>
+</body>
+</html>

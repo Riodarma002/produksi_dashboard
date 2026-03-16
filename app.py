@@ -6,6 +6,10 @@ import streamlit as st
 
 from state import clear_cache
 from ui.theme import inject_theme
+from backend.sync_manager import sync_manager
+
+# Start background sync thread (runs behind visual)
+sync_manager.start_sync()
 
 st.set_page_config(
     page_title="Dashboard Monitoring Production",

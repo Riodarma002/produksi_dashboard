@@ -1,6 +1,6 @@
 """
 CSS Styles — Matching code.html Design
-Inter font, color palette, card styling, animations.
+Rubik font, color palette, card styling, animations.
 """
 import streamlit as st
 
@@ -8,7 +8,7 @@ import streamlit as st
 def inject_css():
     """Inject custom CSS to transform Streamlit into a modern dashboard."""
     st.markdown("""
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
     <style>
         /* ── Reset & Base ─────────────────────────────── */
@@ -22,7 +22,7 @@ def inject_css():
         
         .stApp {
             background-color: #f6f7f8;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-y: hidden;
         }
@@ -175,7 +175,7 @@ def inject_css():
             font-weight: 500;
         }
         .prod-plan-value {
-            font-size: 0.875rem; font-weight: 600; color: #718096;
+            font-size: 1rem; font-weight: 700; color: #64748b; /* Increased size, weight and slightly darker color */
         }
         
         /* Progress Bar */
@@ -203,8 +203,8 @@ def inject_css():
         }
         .ach-pill {
             display: inline-flex; align-items: center;
-            padding: 4px 10px; border-radius: 9999px;
-            font-size: 0.75rem; font-weight: 700;
+            padding: 5px 12px; border-radius: 9999px;
+            font-size: 0.9rem; font-weight: 800; /* Increased font size & weight */
         }
         
         /* Card Footer */
@@ -245,6 +245,37 @@ def inject_css():
             width: 48px; height: 48px; border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
+        }
+
+        /* ── Modern Date Picker Style ─────────────────── */
+        /* Target the actual input field container inside the date widget */
+        div[data-testid="stDateInput"] > div > div {
+            background-color: #ffffff !important;
+            border: 1px solid #e1e5e9 !important;
+            border-radius: 8px !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer !important;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02) !important;
+        }
+
+        /* Hover effect */
+        div[data-testid="stDateInput"] > div > div:hover {
+            border-color: #cbd5e1 !important;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04) !important;
+        }
+
+        /* Focus effect */
+        div[data-testid="stDateInput"] > div > div:focus-within {
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+        }
+
+        /* Styling the text/value inside the date picker */
+        div[data-testid="stDateInput"] input {
+            color: #334155 !important;
+            font-weight: 500 !important;
+            font-size: 0.85rem !important;
+            padding: 0.5rem 0.75rem !important;
         }
 
         /* ── Utility ──────────────────────────────────── */
