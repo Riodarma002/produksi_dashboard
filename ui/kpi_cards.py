@@ -110,28 +110,33 @@ def _prod_card(name, unit, actual, plan, ach):
     return (
         f'<div style="{CARD}" class="kpi-card-hover">'
         '<div style="position:relative;z-index:1;">'
+        
         # Row 1: Title + unit
         '<div style="margin-bottom:12px;">'
         f'<span class="kpi-title" style="font-size:clamp(16px, 1.3vw, 18px); font-weight:700; color:#1e293b; letter-spacing:-0.3px;">{name}'
         f' <span style="color:#94a3b8; font-weight:400; font-size:clamp(13px, 0.9vw, 15px); margin-left:4px;">{unit}</span></span>'
         '</div>'
+        
         # Row 2: Big value (left) ... ach badge (right)
-        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">'
-        f'<span class="kpi-value" style="font-family:\'Inter\', sans-serif; font-size:clamp(42px, 4vw, 56px); font-weight:800; color:#0f172a; line-height:1; letter-spacing:-1px;">{fmt(actual)}</span>'
-        f'<div class="kpi-badge ach-pill" style="font-weight:700; font-size:clamp(12px, 0.95vw, 14px); padding:4px 8px; border-radius:8px; display:flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05); {bstyle}">'
+        # Using flex-wrap:nowrap and min-width on badge to prevent squeezing
+        '<div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:16px; flex-wrap:nowrap; gap:10px;">'
+        f'<span class="kpi-value" style="font-family:\'Inter\', sans-serif; font-size:clamp(40px, 4vw, 54px); font-weight:800; color:#0f172a; line-height:1; letter-spacing:-1.5px; white-space:nowrap;">{fmt(actual)}</span>'
+        f'<div class="kpi-badge ach-pill" style="font-weight:700; font-size:clamp(12px, 0.9vw, 13px); padding:4px 10px; border-radius:8px; display:inline-flex; align-items:center; gap:4px; box-shadow:0 1px 2px rgba(0,0,0,0.05); {bstyle}; white-space:nowrap; flex-shrink:0;">'
         f'{bicon}<span>{fmt(ach, 1)}%</span></div>'
         '</div>'
+        
         # Row 3: Progress bar with gradient
-        '<div style="width:100%;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;margin-bottom:14px; position:relative;">'
+        '<div style="width:100%;height:6px;background:#f1f5f9;border-radius:4px;overflow:hidden;margin-bottom:12px; position:relative;">'
         f'<div style="height:100%;width:{pct}%;background:linear-gradient(90deg, {bcolor} 0%, {bcolor}dd 100%);border-radius:4px;'
         f'transition:width 0.8s cubic-bezier(0.4, 0, 0.2, 1); box-shadow:0 2px 4px rgba(0,0,0,0.1);"></div>'
         '</div>'
-        '</div>'
+        
         # Row 4: Progress label ... Plan value
-        '<div style="display:flex;align-items:center;justify-content:space-between; position:relative;z-index:1;">'
+        '<div style="display:flex;align-items:center;justify-content:space-between; position:relative;z-index:1; padding-top:2px;">'
         f'<span style="font-size:clamp(11px, 0.85vw, 13px);color:{bcolor};font-weight:600; letter-spacing:0.3px;">{"Achieved" if ach >= 100 else "In Progress"}</span>'
-        f'<span class="prod-plan-value" style="font-size:clamp(16px, 1.3vw, 18px);font-weight:800;color:#475569;">Target: <span style="font-weight:900;color:{bcolor};">{fmt(plan)}</span></span>'
+        f'<span class="prod-plan-value" style="font-size:clamp(16px, 1.3vw, 18px);font-weight:700;color:#475569;">Target: <strong style="font-weight:900;color:{bcolor};">{fmt(plan)}</strong></span>'
         '</div>'
+        
         '</div>'
         '<style>.kpi-card-hover:hover{transform:translateY(-2px); box-shadow:0 8px 16px rgba(0,0,0,0.08);}</style>'
     )
