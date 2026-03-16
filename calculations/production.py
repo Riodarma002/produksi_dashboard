@@ -241,6 +241,10 @@ def calc_coal_stock(
     prod_ch = sheets["prod_ch"]
     coal_rom = sheets.get("coal_rom", pd.DataFrame())
     start_date, end_date = date_range
+    
+    # Ensure they are pandas Timestamps for safe comparison with datetime64[ns] columns
+    start_date = pd.Timestamp(start_date)
+    end_date = pd.Timestamp(end_date)
 
     ch_range = prod_ch[
         (prod_ch["Date"] >= start_date) &
