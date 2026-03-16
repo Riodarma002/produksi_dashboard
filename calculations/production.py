@@ -77,12 +77,26 @@ def filter_data(sheets: dict, date_range: tuple, selected_pit: str) -> dict:
     else:
         rain_f = pd.DataFrame()
 
-    # CT: Filter by date only; section visibility controlled by plan
+    # CT: Filter by date AND PIT (same as OB and CH)
     if not prod_ct.empty:
-        ct_f = prod_ct[
-            (prod_ct["Date"] >= start_date) &
-            (prod_ct["Date"] <= end_date)
-        ]
+        # Check for PIT Fix first, then PIT
+        if "PIT Fix" in prod_ct.columns:
+            ct_f = prod_ct[
+                (prod_ct["Date"] >= start_date) &
+                (prod_ct["Date"] <= end_date) &
+                (prod_ct["PIT Fix"] == selected_pit)
+            ]
+        elif "PIT" in prod_ct.columns:
+            ct_f = prod_ct[
+                (prod_ct["Date"] >= start_date) &
+                (prod_ct["Date"] <= end_date) &
+                (prod_ct["PIT"] == selected_pit)
+            ]
+        else:
+            ct_f = prod_ct[
+                (prod_ct["Date"] >= start_date) &
+                (prod_ct["Date"] <= end_date)
+            ]
     else:
         ct_f = pd.DataFrame()
 
@@ -173,11 +187,33 @@ def calc_achievements(actuals: dict, plans: dict) -> dict:
 
 
 def calc_stripping_ratio(actuals: dict) -> float:
-    """Calculate actual stripping ratio (OB / CH)."""
+    """Calculate actual stripping ratio (OB / CH).
+
+    Standard Industri Tambang Batubara:
+    - Overburden (OB): BCM (Bank Cubic Meter)
+    - Coal Hauling (CH): MT (Metric Tons)
+    - Stripping Ratio: BCM/MT (volume OB per ton batubara)
+
+    Note: Stripping ratio yang normal biasanya berkisar 2-10 BCM/MT
+    tergantung kondisi geologi dan kedalaman tambang.
+    """
     try:
         actual_ob = float(actuals["actual_ob"])
         actual_ch = float(actuals["actual_ch"])
-        return actual_ob / actual_ch if actual_ch > 0 else 0
+
+        # Validasi: Jika tidak ada data CH, stripping ratio tidak dapat dihitung
+        if actual_ch <= 0:
+            return 0.0
+
+        sr = actual_ob / actual_ch
+
+        # Validasi: Stripping ratio yang sangat tinggi (>50) mungkin indikasi data CH yang tidak lengkap
+        if sr > 50:
+            # Ini kemungkinan masalah data, bukan kondisi geologi yang normal
+            # Kembalikan 0 sebagai indikasi data tidak valid
+            return 0.0
+
+        return sr
     except (ValueError, TypeError):
         return 0
 

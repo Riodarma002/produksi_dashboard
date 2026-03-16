@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c \"import pickle; import pandas as pd; data = pickle.load\\(open\\(''data/cache.pkl'', ''rb''\\)\\); sheets = data[''sheets'']; print\\(''CT columns:'', sheets[''prod_ct''].columns.tolist\\(\\)\\); print\\(''CT shape:'', sheets[''prod_ct''].shape\\); print\\(''CT sample:'', sheets[''prod_ct''].head\\(15\\).to_string\\(\\)\\)\")"
+    ]
+  }
+}
