@@ -85,10 +85,21 @@ selected_pit = st.session_state.get("jo_toggle", pit_names[0])
 filtered = filter_data(sheets, (start_date, end_date), selected_pit)
 
 # Find freshness - Get last hour with actual data
+# Find freshness - Get last hour with actual data (>0 volume)
 actual_hours = set()
 for df_key in ["ob_f", "ch_f", "ct_f"]:
-    if not filtered[df_key].empty and "Hour LU" in filtered[df_key].columns:
-        actual_hours.update(filtered[df_key]["Hour LU"].unique())
+    df = filtered[df_key]
+    if not df.empty and "Hour LU" in df.columns:
+        # Check all possible value columns
+        value_cols = ["Volume", "Netto", "Production"]
+        has_val_mask = pd.Series(False, index=df.index)
+        for c in value_cols:
+            if c in df.columns:
+                has_val_mask = has_val_mask | (pd.to_numeric(df[c], errors="coerce").fillna(0) > 0)
+        
+        valid_df = df[has_val_mask]
+        if not valid_df.empty:
+            actual_hours.update(valid_df["Hour LU"].unique())
 
 last_h = None
 last_h_display = None
