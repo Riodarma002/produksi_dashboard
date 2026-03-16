@@ -15,7 +15,7 @@ from backend.azure_api import download_excel_from_graph
 logger = logging.getLogger(__name__)
 
 
-@st.cache_data(ttl=CACHE_TTL_SECONDS) # Removed show_spinner
+# Removed show_spinner and @st.cache_data to ensure latest .pkl is ALWAYS read on new sessions or refresh.
 def load_data() -> dict:
     """Read data from local cache if available, otherwise fetch synchronously."""
     # 1. Try to read from local cache file

@@ -32,7 +32,7 @@ sheets = init_data()
 input_values = get_input_values()
 
 pit_names = list(PIT_REGISTRY.keys())
-ROTATE_INTERVAL_MS = 30_000  # 30 seconds
+ROTATE_INTERVAL_MS = 15_000  # 15 seconds
 
 # ── Session state init ────────────────────────────────────────
 # ── Session state init ────────────────────────────────────────
@@ -47,7 +47,7 @@ if "user_interact_time" not in st.session_state:
 if "auto_play" not in st.session_state:
     st.session_state.auto_play = True
 
-# ── Auto-refresh timer (invisible, triggers every 30s) ────────
+# ── Auto-refresh timer (invisible, triggers every 15s) ────────
 # If auto_play is False, we set interval to something very large or 0 to "stop" it.
 # st_autorefresh doesn't support disabling easily, so we use a very large interval.
 curr_interval = ROTATE_INTERVAL_MS if st.session_state.auto_play else 9999999
@@ -57,9 +57,9 @@ auto_count = st_autorefresh(interval=curr_interval, key="auto_rotate")
 is_auto = auto_count != st.session_state.prev_auto_count
 st.session_state.prev_auto_count = auto_count
 
-# If auto-refresh AND user has been idle for >30s → advance JO
+# If auto-refresh AND user has been idle for >10s (leave margin for lag) → advance JO
 idle_seconds = time.time() - st.session_state.user_interact_time
-if is_auto and idle_seconds > 30 and st.session_state.auto_play:
+if is_auto and idle_seconds > 10 and st.session_state.auto_play:
     st.session_state.jo_idx = (st.session_state.jo_idx + 1) % len(pit_names)
     st.session_state.jo_toggle = pit_names[st.session_state.jo_idx]
     st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
@@ -148,7 +148,7 @@ else:
 # 4. Dashboard Header Row (Fixed via CSS)
 st.markdown('<div class="white-header-bg">', unsafe_allow_html=True)
 # Ensure ALL columns are vertically aligned to the bottom
-h_col1, h_col2, h_col3, h_col4 = st.columns([1.5, 2.2, 1.2, 0.3], vertical_alignment="bottom", gap="small")
+h_col1, h_col2, h_col3, h_col4 = st.columns([1.5, 2.2, 1.1, 0.4], vertical_alignment="bottom", gap="small")
 
 with h_col1:
     st.markdown(f'''
@@ -248,6 +248,13 @@ with h_col2:
         padding-bottom: 0 !important;
         display: flex !important;
         align-items: center !important;
+        white-space: nowrap !important;
+        min-width: 90px !important;
+    }
+    
+    [data-testid="stButton"] button p {
+        white-space: nowrap !important;
+        margin: 0 !important;
     }
 
     /* Title specifically - remove gaps */

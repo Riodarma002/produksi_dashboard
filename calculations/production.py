@@ -280,6 +280,7 @@ def calc_coal_stock(
             # Determine value column in coal_rom
             if "Volume" in rom_range.columns:
                 ch_to_rom = rom_range["Volume"].sum()
+                needs_conversion_rom = False  # Volume is naturally MT
             elif "Netto" in rom_range.columns:
                 ch_to_rom = rom_range["Netto"].sum()
                 needs_conversion_rom = True  # kg -> MT
