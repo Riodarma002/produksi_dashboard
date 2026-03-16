@@ -158,8 +158,22 @@ else:
 
 # 4. Dashboard Header Row (Fixed via CSS)
 st.markdown('<div class="white-header-bg">', unsafe_allow_html=True)
+
+# Centered, Enlarge, Responsive Time Badge
+st.markdown(f'''
+<div style="display:flex; justify-content:center; margin-bottom: 20px; width: 100%;">
+    <span style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); color:#0369a1; padding:12px 32px; border-radius:12px; border:1.5px solid #bae6fd; font-weight:700; font-size:18px; box-shadow:0 4px 6px -1px rgba(14,165,233,0.15), 0 2px 4px -1px rgba(14,165,233,0.1); display:inline-flex; align-items:center; gap:10px;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        {last_input_str}
+    </span>
+</div>
+''', unsafe_allow_html=True)
+
 # Ensure ALL columns are vertically aligned to the bottom
-h_col1, h_col2, h_col3, h_col4 = st.columns([1.5, 2.2, 1.1, 0.4], vertical_alignment="bottom", gap="small")
+h_col1, h_col2, h_col3 = st.columns([1.5, 3.5, 0.5], vertical_alignment="bottom", gap="small")
 
 with h_col1:
     st.markdown(f'''
@@ -167,13 +181,6 @@ with h_col1:
         <h1 class="dash-title" style="margin:0; font-size:22px; font-weight:700; color:#0f172a;">Dashboard Produksi</h1>
         <div style="font-size:12px; color:#64748b; margin-top:8px; font-weight:500; display:flex; align-items:center; gap:10px;">
             <span>Area: <strong style="color:#0f172a; font-size:13px;">{display_jo}</strong></span>
-            <span style="background:linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); color:#0369a1; padding:6px 12px; border-radius:8px; border:1px solid #bae6fd; font-weight:600; font-size:11px; display:inline-flex; align-items:center; gap:6px; box-shadow:0 1px 3px rgba(14,165,233,0.1);">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                {last_input_str}
-            </span>
         </div>
     </div>
     ''', unsafe_allow_html=True)
@@ -193,14 +200,13 @@ with h_col2:
     [data-testid="column"] {
         display: flex !important;
         align-items: flex-end !important; /* Changed from center to flex-end */
-        height: 64px !important;
+        height: 68px !important;
         padding-bottom: 4px !important; /* Small padding at bottom */
     }
     
     [data-testid="stHorizontalBlock"] > div:nth-child(1) { justify-content: flex-start !important; align-items: flex-start !important; }
-    [data-testid="stHorizontalBlock"] > div:nth-child(2) { justify-content: center !important; }
-    [data-testid="stHorizontalBlock"] > div:nth-child(3) { justify-content: flex-end !important; }
-    [data-testid="stHorizontalBlock"] > div:nth-child(4) { justify-content: flex-end !important; }
+    [data-testid="stHorizontalBlock"] > div:nth-child(2) { justify-content: flex-end !important; } /* Move JO to right */
+    [data-testid="stHorizontalBlock"] > div:nth-child(3) { justify-content: flex-end !important; } /* Move Pause to right */
 
     /* 2. COMPLETELY STRIP SEGMENTED CONTROL BOXES */
     div[data-testid="stSegmentedControl"] {
@@ -212,30 +218,42 @@ with h_col2:
         gap: 0 !important;
     }
 
-    /* Target the actual buttons inside segmented control more specifically */
-    div[data-testid="stSegmentedControl"] [data-testid="stBaseButton-secondary"],
-    div[data-testid="stSegmentedControl"] button {
+    /* Target the actual tabs inside segmented control more specifically (Streamlit 1.35+) */
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"] {
         background: transparent !important;
         border: none !important;
-        border-bottom: 3px solid transparent !important;
+        border-bottom: 4px solid transparent !important;
         border-radius: 0 !important;
-        height: 36px !important; /* Reduced height to sit lower */
+        height: 48px !important; /* Enlarge height */
         margin: 0 !important;
-        padding: 0 20px !important;
+        padding: 0 24px !important; /* Enlarge padding */
+        font-size: 14px !important; /* Enlarge font size */
         color: #64748b !important;
         box-shadow: none !important;
         transition: all 0.2s ease !important;
         width: auto !important;
         display: flex !important;
-        align-items: flex-end !important; /* Text aligns to bottom */
-        padding-bottom: 6px !important;
+        align-items: center !important; /* Center text vertically */
+        padding-bottom: 4px !important;
+        cursor: pointer !important;
     }
 
-    /* The Active state - Forced Underline */
-    div[data-testid="stSegmentedControl"] [aria-checked="true"],
-    div[data-testid="stSegmentedControl"] button[aria-checked="true"] {
+    /* Remove default dark backgrounds from inner spans/divs */
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"] > div,
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"] span {
         background: transparent !important;
-        border-bottom: 3px solid #16a34a !important; /* MGE Green Underline */
+    }
+
+    /* The Active state - Forced Underline (Streamlit 1.35+ uses aria-selected) */
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"][aria-selected="true"] {
+        background: transparent !important;
+        border-bottom: 4px solid #16a34a !important; /* MGE Green Underline */
+        color: #16a34a !important;
+        font-weight: 700 !important;
+    }
+    
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"][aria-selected="true"] p,
+    div[data-testid="stSegmentedControl"] div[data-baseweb="tab"][aria-selected="true"] span {
         color: #16a34a !important;
         font-weight: 700 !important;
     }
@@ -248,24 +266,27 @@ with h_col2:
 
     /* Target the container of the date input to push it down */
     div[data-testid="stDateInput"] > div {
-        min-height: 36px !important;
+        min-height: 48px !important;
     }
     
     /* Play/pause button adjustment */
     [data-testid="stButton"] button {
-        height: 36px !important;
-        min-height: 36px !important;
+        height: 48px !important;
+        min-height: 48px !important;
         padding-top: 0 !important;
         padding-bottom: 0 !important;
         display: flex !important;
         align-items: center !important;
         white-space: nowrap !important;
-        min-width: 90px !important;
+        min-width: 100px !important;
+        border-radius: 8px !important;
     }
     
     [data-testid="stButton"] button p {
         white-space: nowrap !important;
         margin: 0 !important;
+        font-size: 15px !important;
+        font-weight: 600 !important;
     }
 
     /* Title specifically - remove gaps */
@@ -278,9 +299,6 @@ with h_col2:
     """, unsafe_allow_html=True)
 
 with h_col3:
-    date_range = render_date_selector(sheets, key="prod_date", show_label=False)
-
-with h_col4:
     # Play/Pause Toggle with Text Labels
     if st.session_state.auto_play:
         label = "⏸️ Pause"
