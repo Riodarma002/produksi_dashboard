@@ -171,8 +171,7 @@ with col_info:
 
 with col_pit:
     selected_pit_new = st.segmented_control(
-        label="PIT",
-        options=pit_names,
+        pit_names,
         label_visibility="collapsed",
         key="jo_toggle_final_fix"
     )
