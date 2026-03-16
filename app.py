@@ -7,6 +7,7 @@ import streamlit as st
 from state import clear_cache
 from ui.theme import inject_theme
 from backend.sync_manager import sync_manager
+from streamlit_autorefresh import st_autorefresh
 
 # Start background sync thread (runs behind visual)
 sync_manager.start_sync()
@@ -16,6 +17,10 @@ st.set_page_config(
     page_icon="logo_mge.png",
     layout="wide",
 )
+
+# Auto-refresh the entire application every 1 hour (3600000 ms) 
+# to fetch the latest background sync data without manual refresh.
+st_autorefresh(interval=3600000, key="global_hourly_refresh")
 
 inject_theme()
 
