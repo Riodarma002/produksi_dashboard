@@ -33,7 +33,7 @@ sheets = init_data()
 input_values = get_input_values()
 
 pit_names = list(PIT_REGISTRY.keys())
-ROTATE_INTERVAL_MS = 15_000  # 15 seconds
+ROTATE_INTERVAL_MS = 25_000  # 25 seconds
 
 # ── Session state init ────────────────────────────────────────
 if "jo_idx" not in st.session_state:

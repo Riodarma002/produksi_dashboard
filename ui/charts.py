@@ -248,11 +248,9 @@ def build_cumm_chart(
             )
 
     fig.update_layout(
-        height=550,
+        height=420,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
-        uirevision="constant", # Prevents full redraw on data change
-        transition=dict(duration=500, easing="cubic-in-out"), # Smooth animation
         xaxis=dict(
             tickmode="array", tickvals=list(range(len(OP_HOURS))), ticktext=OP_HOURS,
             range=[-0.5, len(OP_HOURS) - 0.5], showgrid=False,
@@ -301,7 +299,12 @@ def render_production_charts(
             cumm_pit, palette="ob",
             rain_df=rain_f
         )
-        st.plotly_chart(fig_ob, width="stretch", config={"responsive": True, "displayModeBar": False})
+        st.plotly_chart(
+            fig_ob, 
+            key="chart_ob_cumm", 
+            use_container_width=True, 
+            config={"responsive": True, "displayModeBar": False}
+        )
 
     with col_ch:
         fig_ch = build_cumm_chart(
@@ -310,4 +313,9 @@ def render_production_charts(
             cumm_pit, convert_kg=False, palette="ch",
             rain_df=rain_f
         )
-        st.plotly_chart(fig_ch, width="stretch", config={"responsive": True, "displayModeBar": False})
+        st.plotly_chart(
+            fig_ch, 
+            key="chart_ch_cumm", 
+            use_container_width=True, 
+            config={"responsive": True, "displayModeBar": False}
+        )
