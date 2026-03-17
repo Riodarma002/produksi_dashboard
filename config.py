@@ -72,8 +72,8 @@ ONEDRIVE_LINKS = {
 }
 
 # ── Cache Settings ────────────────────────────────────────────
-CACHE_TTL_SECONDS = 3600  # 1 hour - Auto-refresh data setiap jam
-SYNC_INTERVAL = 3600     # 1 hour (background sync)
+CACHE_TTL_SECONDS = 900  # 15 minutes - Auto-refresh data
+SYNC_INTERVAL = 900      # 15 minutes (background sync)
 CACHE_FILE = "data/cache.pkl"
 
 # ── Azure AD / Microsoft Graph API ─────────────────────────────
