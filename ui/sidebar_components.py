@@ -186,7 +186,6 @@ def render_refresh_section():
                     # Success message
                     latest_date = sheets["prod_ob"]["Date"].max().date()
                     st.success(f"✅ Data berhasil diupdate! Tanggal terbaru: {latest_date}")
-                    st.balloons()
                     time.sleep(1)
                     st.rerun()
 
