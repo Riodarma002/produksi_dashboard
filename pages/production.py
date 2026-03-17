@@ -59,9 +59,9 @@ auto_count = st_autorefresh(interval=curr_interval, key="auto_rotate")
 is_auto = auto_count != st.session_state.prev_auto_count
 st.session_state.prev_auto_count = auto_count
 
-# If auto-refresh AND user has been idle for >10s (leave margin for lag) → advance JO
+# If auto-refresh AND user has been idle for >10s AND we are not on the very first render tick (auto_count > 0)
 idle_seconds = time.time() - st.session_state.user_interact_time
-if is_auto and idle_seconds > 10 and st.session_state.auto_play and len(pit_names) > 0:
+if is_auto and auto_count > 0 and idle_seconds > 10 and st.session_state.auto_play and len(pit_names) > 0:
     st.session_state.jo_idx = (st.session_state.jo_idx + 1) % len(pit_names)
     st.session_state.jo_toggle = pit_names[st.session_state.jo_idx]
     st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
