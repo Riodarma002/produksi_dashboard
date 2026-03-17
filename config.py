@@ -12,6 +12,8 @@ from pathlib import Path
 # Load environment variables from .env file
 load_dotenv()
 
+import streamlit as st
+
 # ── Environment Variable Validation ───────────────────────────
 def validate_environment():
     """
@@ -33,21 +35,29 @@ def validate_environment():
     missing_vars = []
 
     for var_name, description in required_vars.items():
+        # Specifically try to check Streamlit Secrets too if missing from os.getenv
+        # This helps Streamlit Cloud users
         value = os.getenv(var_name)
+        if not value:
+            try:
+                if var_name in st.secrets:
+                    value = st.secrets[var_name]
+                    os.environ[var_name] = value  # Sync it back to env for other libraries
+            except:
+                pass
+                
         if not value or value.strip() == "":
-            missing_vars.append(f"  • {var_name}: {description}")
+            missing_vars.append(f"• {var_name}: {description}")
 
     if missing_vars:
         error_msg = (
-            "❌ Missing Required Environment Variables:\n"
-            "\n".join(missing_vars) +
-            "\n\nPlease create a .env file from .env.example and set your credentials.\n"
-            "Example:\n"
-            "  cp .env.example .env\n"
-            "  # Then edit .env with your Azure AD credentials"
+            "🚨 **Missing Required Cloud Secrets/Environment Variables**\n\n"
+            + "\n".join(missing_vars) +
+            "\n\nIf you are on Streamlit Cloud, please add these to **Settings > Secrets**. "
+            "If local, please ensure your `.env` file is loaded."
         )
-        print(error_msg, file=sys.stderr)
-        sys.exit(1)
+        st.error(error_msg)
+        st.stop()
 
     return True
 
@@ -67,18 +77,10 @@ SYNC_INTERVAL = 3600     # 1 hour (background sync)
 CACHE_FILE = "data/cache.pkl"
 
 # ── Azure AD / Microsoft Graph API ─────────────────────────────
-# All Azure credentials must be set in .env file (validated above)
-AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID")
-AZURE_CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID")
-AZURE_CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET")
-
-# Type validation
-if not isinstance(AZURE_TENANT_ID, str) or not AZURE_TENANT_ID:
-    raise ValueError("AZURE_TENANT_ID must be a non-empty string")
-if not isinstance(AZURE_CLIENT_ID, str) or not AZURE_CLIENT_ID:
-    raise ValueError("AZURE_CLIENT_ID must be a non-empty string")
-if not isinstance(AZURE_CLIENT_SECRET, str) or not AZURE_CLIENT_SECRET:
-    raise ValueError("AZURE_CLIENT_SECRET must be a non-empty string")
+# All Azure credentials must be set in .env file or Streamlit Secrets (validated above)
+AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID", "")
+AZURE_CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID", "")
+AZURE_CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET", "")
 
 # Optional: Specific file IDs for the Excel workbooks (if using Graph API with file IDs)
 FILE_IDS = {
