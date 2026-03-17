@@ -122,7 +122,7 @@ def extract_sheets(data: dict) -> dict:
                 df.columns = [str(c).strip() for c in df.columns]
 
                 # Clean potential string spaces in value columns before checking them
-                for col in ["Netto", "Volume"]:
+                for col in ["Netto", "Volume", "Volume CH"]:
                     if col in df.columns:
                         # Convert errant spaces to NaN, then 0, then float
                         df[col] = pd.to_numeric(df[col].astype(str).str.strip().replace("", "NaN"), errors="coerce").fillna(0)
@@ -137,12 +137,36 @@ def extract_sheets(data: dict) -> dict:
                     # Only Netto exists (old format in kg)
                     df["Volume"] = df["Netto"] / 1000
                     value_col = "Volume"
+                elif "Volume CH" in df.columns:
+                    # Specifically named Volume CH
+                    df["Volume"] = df["Volume CH"]
+                    value_col = "Volume"
                 elif "Volume" in df.columns:
-                    # Only Volume exists (new format in MT)
+                    # Generic Volume exists (new format in MT)
                     value_col = "Volume"
                 else:
                     # No value column, skip this sheet
                     continue
+
+                # --- BEGIN FALLBACK FOR SHAREPOINT FORMULA DROP ---
+                # If Excel formulas for Hour LU or PIT Fix were not evaluated by openpyxl (resulting in NaN)
+                if "Hour LU" in df.columns and df["Hour LU"].isna().mean() > 0.5:
+                    if "Hour Fix" in df.columns:
+                        df["Hour LU"] = df["Hour LU"].fillna(
+                                pd.to_datetime(df["Hour Fix"].astype(str), errors='coerce').dt.hour.apply(
+                                    lambda x: f"{int(x):02d}" if pd.notna(x) else None
+                                )
+                            )
+
+                if "PIT Fix" in df.columns and df["PIT Fix"].isna().mean() > 0.5:
+                    if "Product" in df.columns and "db" in db_hourly:
+                        db_sheet = db_hourly["db"]
+                        if "Product" in db_sheet.columns and "PIT" in db_sheet.columns:
+                            prod_to_pit = dict(zip(db_sheet["Product"].dropna().astype(str).str.strip(), db_sheet["PIT"].dropna().astype(str).str.strip()))
+                            df["PIT Fix"] = df["PIT Fix"].fillna(df["Product"].astype(str).str.strip().map(prod_to_pit))
+                            
+                print(f"DEBUG {sheet_name}: PIT Fix NaNs={df['PIT Fix'].isna().sum()} | Hour LU NaNs={df['Hour LU'].isna().sum()}")
+                # --- END FALLBACK ---
 
                 # Standardize column names
                 if all(col in df.columns for col in required_ch_cols + [value_col]):
