@@ -45,13 +45,13 @@ if "jo_idx" not in st.session_state:
 if "jo_toggle" not in st.session_state:
     st.session_state.jo_toggle = pit_names[0] if pit_names else "N/A"
 if "prev_auto_count" not in st.session_state:
-    st.session_state.prev_auto_count = 0
+    st.session_state.prev_auto_count = -1
 if "user_interact_time" not in st.session_state:
     st.session_state.user_interact_time = 0.0
 if "auto_play" not in st.session_state:
     st.session_state.auto_play = True
 
-# ── Auto-refresh timer (invisible, triggers every 15s) ────────
+# ── Auto-refresh timer (invisible, triggers every 25s) ────────
 curr_interval = ROTATE_INTERVAL_MS if st.session_state.auto_play else 9999999
 auto_count = st_autorefresh(interval=curr_interval, key="auto_rotate")
 
