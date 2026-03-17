@@ -7,6 +7,7 @@ import streamlit as st
 from state import clear_cache
 from ui.theme import inject_theme
 from backend.sync_manager import sync_manager
+from ui.sidebar_components import render_refresh_section, render_section_header
 from streamlit_autorefresh import st_autorefresh
 
 # Start background sync thread (runs behind visual)
@@ -75,18 +76,71 @@ with st.sidebar:
     a[data-testid="stPageLink-NavLink"] {{
         position: relative !important;
         padding-left: 36px !important;
+        padding-right: 12px !important;
+        padding-top: 10px !important;
+        padding-bottom: 10px !important;
+        margin: 4px 0 !important;
+        border-radius: 8px !important;
+        transition: all 0.2s ease !important;
+        font-weight: 500 !important;
     }}
+
+    /* Default state - subtle gray */
+    a[data-testid="stPageLink-NavLink"] {{
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+    }}
+
     a[data-testid="stPageLink-NavLink"] p {{
         margin-left: 0 !important;
+        color: inherit !important;
     }}
-    
+
+    /* HOVER state - green (for non-active pages) */
+    a[data-testid="stPageLink-NavLink"]:not([data-testid="stPageLink-NavLink"][data-active="true"]):hover {{
+        background-color: #dcfce7 !important;
+        color: #16a34a !important;
+        border-left: 3px solid #22c55e !important;
+        transform: translateX(2px) !important;
+    }}
+
+    a[data-testid="stPageLink-NavLink"]:not([data-testid="stPageLink-NavLink"][data-active="true"]):hover p {{
+        color: #16a34a !important;
+    }}
+
+    /* SELECTED/ACTIVE state - stronger green (PERMANENT) */
+    [data-testid="stPageLink-NavLink"][data-active="true"],
+    a[data-testid="stPageLink-NavLink"].active,
+    .stPageLink-NavLink.active {{
+        background-color: #bbf7d0 !important;
+        color: #15803d !important;
+        border-left: 3px solid #22c55e !important;
+        font-weight: 600 !important;
+    }}
+
+    [data-testid="stPageLink-NavLink"][data-active="true"] p,
+    a[data-testid="stPageLink-NavLink"].active p,
+    .stPageLink-NavLink.active p {{
+        color: #15803d !important;
+        font-weight: 600 !important;
+    }}
+
+    /* Make sure active state overrides hover */
+    [data-testid="stPageLink-NavLink"][data-active="true"]:hover,
+    a[data-testid="stPageLink-NavLink"].active:hover {{
+        background-color: #bbf7d0 !important;
+        color: #15803d !important;
+        border-left: 3px solid #22c55e !important;
+        transform: none !important;
+    }}
+
     /* Target the Summary link by matching the 'Summary' in its href */
     a[data-testid="stPageLink-NavLink"][href*="ummary" i]::before {{
         content: ""; background-image: url("data:image/png;base64,{summary_icon_b64}");
         position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
         width: 18px; height: 18px; background-size: contain; background-repeat: no-repeat;
     }}
-    
+
     /* Target the Produksi link. Since it is default=True, its href might be "/" or "/Dashboard" */
     a[data-testid="stPageLink-NavLink"][href*="ashboard" i]::before,
     a[data-testid="stPageLink-NavLink"][href*="roduksi" i]::before,
@@ -96,16 +150,65 @@ with st.sidebar:
         position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
         width: 18px; height: 18px; background-size: contain; background-repeat: no-repeat;
     }}
+
+    /* Active page icons - slightly larger */
+    [data-testid="stPageLink-NavLink"][data-active="true"]::before,
+    a[data-testid="stPageLink-NavLink"].active::before {{
+        transform: translateY(-50%) scale(1.1) !important;
+    }}
+
+    /* Hover icons for non-active pages */
+    a[data-testid="stPageLink-NavLink"]:not([data-active="true"]):hover::before {{
+        transform: translateY(-50%) scale(1.1) !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
     st.page_link(pg_summary, label="Summary")
     st.page_link(pg_production, label="Produksi")
 
-    st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("---")
-    if st.button("🔄 Refresh Data", use_container_width=True):
-        clear_cache()
-        st.rerun()
+    # Clean divider
+    st.markdown(
+        """
+        <div style="
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+            margin: 20px 0;
+        "></div>
+        """,
+        unsafe_allow_html=True
+    )
+
+    # Section header for refresh
+    render_section_header("DATA CONTROL", "🔄")
+
+    # Clean refresh section
+    render_refresh_section()
+
+    # Info section
+    st.markdown(
+        """
+        <div style="
+            padding: 12px;
+            background: #f0f9ff;
+            border-left: 3px solid #3b82f6;
+            border-radius: 6px;
+            margin: 12px 0;
+        ">
+            <div style="
+                font-size: 11px;
+                color: #0369a1;
+                font-weight: 500;
+                margin-bottom: 4px;
+            ">💡 Info</div>
+            <div style="
+                font-size: 10px;
+                color: #075985;
+                line-height: 1.4;
+            ">Data auto-sync setiap 1 jam. Klik refresh untuk update segera.</div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
 nav.run()

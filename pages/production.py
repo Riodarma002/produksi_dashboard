@@ -19,6 +19,10 @@ project_root = current_dir.parent.absolute()
 if str(project_root) not in sys.path:
     sys.path.append(str(project_root))
 
+# Import logger for error tracking
+from utils.logger import get_logger
+logger = get_logger("production")
+
 from state import init_data, get_input_values, render_date_selector, get_valid_dates
 from config import PIT_REGISTRY, OP_HOURS
 from calculations.production import (
@@ -57,19 +61,45 @@ st.session_state.prev_auto_count = auto_count
 
 # If auto-refresh AND user has been idle for >10s (leave margin for lag) → advance JO
 idle_seconds = time.time() - st.session_state.user_interact_time
-if is_auto and idle_seconds > 10 and st.session_state.auto_play:
+if is_auto and idle_seconds > 10 and st.session_state.auto_play and len(pit_names) > 0:
     st.session_state.jo_idx = (st.session_state.jo_idx + 1) % len(pit_names)
     st.session_state.jo_toggle = pit_names[st.session_state.jo_idx]
     st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
+    logger.debug(f"Auto-rotated to PIT: {st.session_state.jo_toggle} (idle: {idle_seconds:.1f}s)")
 
 # ── Header Updates & Logic ──────────────────────────
 # 1. State & Date Range Initialization
 date_range = st.session_state.get("prod_date")
+
+# Get valid dates from fresh data
+valid_dates = get_valid_dates(sheets)
+
+# Error handling for empty data
+if not valid_dates:
+    st.error("❌ **Tidak ada data tersedia**")
+    st.info("💡 Silakan klik tombol **Refresh Data** di sidebar untuk memuat data terbaru.")
+    logger.error("No valid dates found in data sheets")
+    st.stop()
+
+# Get the latest available date
+latest_available_date = valid_dates[-1].date()
+
+# Smart date range selection:
+# 1. If no date_range in session state → use latest
+# 2. If date_range exists but is BEFORE latest available → auto-update to latest
+# 3. If date_range exists and is valid → keep user's selection
 if not date_range or not isinstance(date_range, (list, tuple)) or len(date_range) < 2:
-    # Use fallback calculated from data if session state is missing or incomplete
-    valid_dates = get_valid_dates(sheets)
-    default_date = valid_dates[-1].date() if valid_dates else datetime.date.today()
-    date_range = (default_date, default_date)
+    date_range = (latest_available_date, latest_available_date)
+    logger.info(f"Using default date: {latest_available_date}")
+else:
+    # Check if current selection is outdated
+    current_end = date_range[1] if isinstance(date_range[1], datetime.date) else date_range[0]
+    if current_end < latest_available_date:
+        # Auto-update to latest date if data is newer
+        date_range = (latest_available_date, latest_available_date)
+        st.session_state.prod_date = date_range
+        logger.info(f"Auto-updated date from {current_end} to {latest_available_date}")
+        st.toast(f"📅 Data baru tersedia! Tanggal diupdate ke {latest_available_date}", icon="ℹ️")
 
 start_date, end_date = date_range
 display_jo = st.session_state.get("jo_toggle", pit_names[0])
@@ -192,10 +222,13 @@ if selected_pit_new and selected_pit_new != selected_pit:
     st.session_state.jo_idx = pit_names.index(selected_pit_new)
     st.session_state.jo_toggle = selected_pit_new
     st.session_state.user_interact_time = time.time()
+    logger.info(f"User switched to PIT: {selected_pit_new}")
     st.rerun()
 
 if play_pause:
     st.session_state.auto_play = not st.session_state.auto_play
+    status = "PLAY" if st.session_state.auto_play else "PAUSE"
+    logger.info(f"User clicked {status} button")
     st.rerun()
 
 if "prev_date" not in st.session_state:
@@ -203,14 +236,23 @@ if "prev_date" not in st.session_state:
 if date_range != st.session_state.prev_date:
     st.session_state.user_interact_time = time.time()
     st.session_state.prev_date = date_range
+    logger.info(f"Date range changed to: {date_range[0]} - {date_range[1]}")
     st.rerun()
 
 # ── Calculations ──────────────────────────────────────────────
-plans = get_plan_values(sheets, selected_pit)
-actuals = calc_actuals(filtered)
-achievements = calc_achievements(actuals, plans)
-sr = calc_stripping_ratio(actuals)
-stock = calc_coal_stock(sheets, date_range, input_values)
+try:
+    plans = get_plan_values(sheets, selected_pit)
+    actuals = calc_actuals(filtered)
+    achievements = calc_achievements(actuals, plans)
+    sr = calc_stripping_ratio(actuals)
+    stock = calc_coal_stock(sheets, date_range, input_values)
+
+    logger.info(f"Calculations completed for PIT: {selected_pit}")
+except Exception as e:
+    logger.error(f"Calculation error for PIT {selected_pit}: {e}", exc_info=True)
+    st.error(f"❌ **Terjadi kesalahan dalam perhitungan:** {str(e)}")
+    st.info("💡 Silakan coba refresh data atau pilih PIT yang lain.")
+    st.stop()
 
 # ── KPI Metrics ───────────────────────────────────────────────
 render_all_metrics(plans, actuals, achievements, plans["has_ct"], sr, stock)

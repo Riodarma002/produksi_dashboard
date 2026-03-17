@@ -128,15 +128,31 @@ def render_date_selector(sheets: dict, key: str, show_label: bool = True) -> tup
 
     # If key already in session state, use it as value to avoid "default value + session state" error
     current_val = st.session_state.get(key)
-    
-    # If current_val is a tuple (range), use it. If it's a single date, make it a tuple.
-    # If nothing is in session state, use calculated defaults.
+
+    # SMART DATE UPDATE: Check if session state date is outdated
     if current_val:
-        if isinstance(current_val, (list, tuple)):
-            widget_value = current_val
+        # Extract the end date from current selection
+        if isinstance(current_val, (list, tuple)) and len(current_val) >= 2:
+            current_end_date = current_val[1]
+        elif isinstance(current_val, (list, tuple)) and len(current_val) == 1:
+            current_end_date = current_val[0]
         else:
-            widget_value = (current_val, current_val)
+            current_end_date = current_val
+
+        # Check if current selection is BEFORE the latest available date
+        # If yes, auto-update to latest (this fixes the "stuck on old date" issue)
+        if current_end_date < default_date:
+            widget_value = (default_date, default_date)
+            # Update session state to new date
+            st.session_state[key] = widget_value
+        else:
+            # Keep current selection
+            if isinstance(current_val, (list, tuple)):
+                widget_value = current_val
+            else:
+                widget_value = (current_val, current_val)
     else:
+        # No session state yet, use default
         widget_value = (default_date, default_date)
 
     date_sel = st.date_input(

@@ -1,12 +1,58 @@
 """
 Centralized Configuration & Constants
+
+Loads environment variables and validates required settings at startup.
 """
 import os
+import sys
 import time
 from dotenv import load_dotenv
+from pathlib import Path
 
 # Load environment variables from .env file
 load_dotenv()
+
+# ── Environment Variable Validation ───────────────────────────
+def validate_environment():
+    """
+    Validate that all required environment variables are set.
+
+    Raises:
+        ValueError: If any required environment variable is missing
+        SystemExit: If validation fails
+
+    Returns:
+        bool: True if all validations pass
+    """
+    required_vars = {
+        "AZURE_TENANT_ID": "Azure AD Tenant ID",
+        "AZURE_CLIENT_ID": "Azure AD Client ID (Application ID)",
+        "AZURE_CLIENT_SECRET": "Azure AD Client Secret"
+    }
+
+    missing_vars = []
+
+    for var_name, description in required_vars.items():
+        value = os.getenv(var_name)
+        if not value or value.strip() == "":
+            missing_vars.append(f"  • {var_name}: {description}")
+
+    if missing_vars:
+        error_msg = (
+            "❌ Missing Required Environment Variables:\n"
+            "\n".join(missing_vars) +
+            "\n\nPlease create a .env file from .env.example and set your credentials.\n"
+            "Example:\n"
+            "  cp .env.example .env\n"
+            "  # Then edit .env with your Azure AD credentials"
+        )
+        print(error_msg, file=sys.stderr)
+        sys.exit(1)
+
+    return True
+
+# Validate environment on import
+validate_environment()
 
 # ── OneDrive Links ────────────────────────────────────────────
 # Updated 2026-03-15: New db_hourly_report file with different structure
@@ -21,21 +67,18 @@ SYNC_INTERVAL = 3600     # 1 hour (background sync)
 CACHE_FILE = "data/cache.pkl"
 
 # ── Azure AD / Microsoft Graph API ─────────────────────────────
-# Read from environment variables with fallback to hardcoded values (for backward compatibility)
-# WARNING: Hardcoded values are deprecated. Please use .env file in production.
-AZURE_TENANT_ID = os.getenv("AZURE_TENANT_ID", "")
-AZURE_CLIENT_ID = os.getenv("AZURE_CLIENT_ID", "")
-AZURE_CLIENT_SECRET = os.getenv("AZURE_CLIENT_SECRET", "")
+# All Azure credentials must be set in .env file (validated above)
+AZURE_TENANT_ID: str = os.getenv("AZURE_TENANT_ID")
+AZURE_CLIENT_ID: str = os.getenv("AZURE_CLIENT_ID")
+AZURE_CLIENT_SECRET: str = os.getenv("AZURE_CLIENT_SECRET")
 
-# Warn if using hardcoded credentials
-if os.getenv("AZURE_TENANT_ID") is None:
-    import warnings
-    warnings.warn(
-        "⚠️  Using hardcoded Azure credentials! Please create a .env file from .env.example "
-        "and set your credentials there for better security.",
-        DeprecationWarning,
-        stacklevel=2
-    )
+# Type validation
+if not isinstance(AZURE_TENANT_ID, str) or not AZURE_TENANT_ID:
+    raise ValueError("AZURE_TENANT_ID must be a non-empty string")
+if not isinstance(AZURE_CLIENT_ID, str) or not AZURE_CLIENT_ID:
+    raise ValueError("AZURE_CLIENT_ID must be a non-empty string")
+if not isinstance(AZURE_CLIENT_SECRET, str) or not AZURE_CLIENT_SECRET:
+    raise ValueError("AZURE_CLIENT_SECRET must be a non-empty string")
 
 # Optional: Specific file IDs for the Excel workbooks (if using Graph API with file IDs)
 FILE_IDS = {

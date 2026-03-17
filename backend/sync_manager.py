@@ -19,6 +19,8 @@ class SyncManager:
     _instance = None
     _lock = threading.Lock()
     _thread = None
+    _is_syncing = False
+    _last_sync_status = {"success": False, "message": "", "timestamp": None}
 
     def __new__(cls):
         with cls._lock:
@@ -37,50 +39,119 @@ class SyncManager:
             self._thread.start()
             logger.info("Background sync thread started.")
 
-    def _sync_worker(self):
-        """Infinite loop to fetch data periodically."""
-        # Delayed import to avoid circular dependency
+    def is_syncing(self) -> bool:
+        """Check if sync is currently in progress."""
+        return self._is_syncing
+
+    def get_last_sync_status(self) -> dict:
+        """Get last sync status."""
+        return self._last_sync_status.copy()
+
+    def trigger_immediate_sync(self) -> dict:
+        """
+        Trigger immediate sync (can be called manually).
+        This runs synchronously and returns the result.
+        """
+        self._is_syncing = True
+        try:
+            result = self._sync_once()
+            self._last_sync_status = result
+            return result
+        finally:
+            self._is_syncing = False
+
+    def _sync_once(self) -> dict:
+        """
+        Perform a single sync operation.
+
+        Returns:
+            dict with keys: success (bool), message (str), duration (float)
+        """
         from backend.data_loader import load_data, extract_sheets, normalize_dataframes, parse_input_plan
 
-        while True:
+        start_time = time.time()
+        retry_count = 0
+        max_retries = 3
+
+        while retry_count < max_retries:
             try:
-                logger.info("Starting background data sync...")
-                
-                # 1. Fetch data (runs synchronously in this thread)
-                # Note: We bypass st.cache_data here by calling the underlying logic
-                # or we just rely on the fact that this is a separate thread.
-                # Since st.cache_data is bound to the streamlit session, we need
-                # a way to fetch data without requiring a streamlit context if possible.
-                
-                # For now, let's use a non-cached version of loading for the worker
+                logger.info(f"Starting sync attempt {retry_count + 1}/{max_retries}")
+
+                # 1. Fetch data
                 data = self._fetch_raw_data()
-                if data:
-                    sheets = extract_sheets(data)
-                    normalize_dataframes(sheets)
-                    input_values = parse_input_plan(sheets["input_plan"])
-                    
-                    # 2. Save to local pickle file atomically
-                    cache_data = {
-                        "sheets": sheets,
-                        "input_values": input_values,
-                        "timestamp": time.time()
-                    }
-                    
-                    # Ensure directory exists
-                    os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
-                    
-                    # Write to temp file first then rename for atomicity
-                    temp_file = CACHE_FILE + ".tmp"
-                    with open(temp_file, "wb") as f:
-                        pickle.dump(cache_data, f)
-                    os.replace(temp_file, CACHE_FILE)
-                    
-                    logger.info(f"Sync complete. Data saved to {CACHE_FILE}")
-                else:
-                    logger.warning("Sync failed: No data fetched.")
+                if not data:
+                    raise Exception("Failed to fetch data from OneDrive")
+
+                # 2. Process data
+                sheets = extract_sheets(data)
+                normalize_dataframes(sheets)
+                input_values = parse_input_plan(sheets["input_plan"])
+
+                # 3. Save to cache atomically
+                cache_data = {
+                    "sheets": sheets,
+                    "input_values": input_values,
+                    "timestamp": time.time()
+                }
+
+                os.makedirs(os.path.dirname(CACHE_FILE), exist_ok=True)
+                temp_file = CACHE_FILE + ".tmp"
+                with open(temp_file, "wb") as f:
+                    pickle.dump(cache_data, f)
+                os.replace(temp_file, CACHE_FILE)
+
+                duration = time.time() - start_time
+                logger.info(f"Sync completed successfully in {duration:.2f}s")
+
+                return {
+                    "success": True,
+                    "message": f"Sync berhasil ({duration:.1f}s)",
+                    "duration": duration,
+                    "timestamp": datetime.now()
+                }
 
             except Exception as e:
-                logger.error(f"Error in background sync worker: {e}")
+                retry_count += 1
+                logger.error(f"Sync attempt {retry_count} failed: {e}")
+
+                if retry_count >= max_retries:
+                    duration = time.time() - start_time
+                    logger.error(f"All sync attempts failed after {duration:.2f}s")
+
+                    return {
+                        "success": False,
+                        "message": f"Sync gagal setelah {max_retries} percobaan: {str(e)}",
+                        "duration": duration,
+                        "timestamp": datetime.now()
+                    }
+                else:
+                    # Exponential backoff: 2^retry_count seconds
+                    backoff_time = 2 ** retry_count
+                    logger.warning(f"Retrying in {backoff_time}s...")
+                    time.sleep(backoff_time)
+
+        return {
+            "success": False,
+            "message": "Unknown error",
+            "duration": time.time() - start_time,
+            "timestamp": datetime.now()
+        }
+
+    def _sync_worker(self):
+        """Infinite loop to fetch data periodically."""
+        while True:
+            try:
+                self._is_syncing = True
+                result = self._sync_once()
+                self._last_sync_status = result
+                self._is_syncing = False
+
+                if not result["success"]:
+                    logger.warning(f"Background sync failed: {result['message']}")
+
+            except Exception as e:
+                logger.error(f"Error in background sync worker: {e}", exc_info=True)
+                self._is_syncing = False
 
             # Wait for the next interval
             time.sleep(SYNC_INTERVAL)

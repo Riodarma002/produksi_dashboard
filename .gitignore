@@ -35,6 +35,12 @@ Desktop.ini
 
 # Logs
 *.log
+logs/
+
+# Cache files
+*.pkl
+*.pickle
+data/cache.pkl
 
 # Data files (sesuaikan jika perlu)
 *.csv
