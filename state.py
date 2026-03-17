@@ -35,6 +35,10 @@ def init_data() -> dict:
             st.session_state["input_values"] = parse_input_plan(sheets["input_plan"])
             
         st.session_state["cache_mtime"] = mtime
+        
+        # VERY IMPORTANT: If we just updated the data in the background, 
+        # force a full rerun so the UI instantly draws the new numbers without manual refresh
+        st.rerun()
             
     return st.session_state["sheets"]
 
