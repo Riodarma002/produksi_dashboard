@@ -51,14 +51,13 @@ def build_cumm_chart(
     colors = CHART_COLORS[palette]
 
     # --- Actual: group by Hour LU ---
-    hourly = actual_df.groupby("Hour LU")[value_col].sum().reset_index()
+    hourly = actual_df.groupby("Hour LU")[value_col].sum(min_count=1).reset_index()
     hourly.columns = ["Hour", "Actual"]
     if convert_kg:
         hourly["Actual"] = hourly["Actual"] / 1000
 
     hourly_full = pd.DataFrame({"Hour": OP_HOURS})
-    hourly_full = hourly_full.merge(hourly, on="Hour", how="left").fillna(0)
-    hourly_full["Cumm_Actual"] = hourly_full["Actual"].cumsum()
+    hourly_full = hourly_full.merge(hourly, on="Hour", how="left")
 
     # --- Plan cumulative curve ---
     plan_full = pd.DataFrame({"Hour": OP_HOURS})
@@ -69,9 +68,13 @@ def build_cumm_chart(
     else:
         plan_full[plan_cumm_col] = 0
 
-    # Last hour with data
-    has_data = hourly_full[hourly_full["Actual"] > 0]
+    # Last hour explicitly reported (Actual is not NaN)
+    has_data = hourly_full[hourly_full["Actual"].notna()]
     last_actual_idx = has_data.index.max() if len(has_data) > 0 else -1
+
+    # Safely fillna(0) for cumsum calculation
+    hourly_full["Actual"] = hourly_full["Actual"].fillna(0)
+    hourly_full["Cumm_Actual"] = hourly_full["Actual"].cumsum()
 
     # Dynamic Y-axis range calculation (Must happen before figure updates)
     all_y = []

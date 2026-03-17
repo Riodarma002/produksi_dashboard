@@ -81,9 +81,9 @@ Di Streamlit Cloud, masukkan environment variables di:
 
 ```toml
 # .streamlit/secrets.toml (untuk Streamlit Cloud)
-AZURE_TENANT_ID = "<your-tenant-id>"
-AZURE_CLIENT_ID = "<your-client-id>"
-AZURE_CLIENT_SECRET = "<your-client-secret>"
+AZURE_TENANT_ID = "your-tenant-id-here"
+AZURE_CLIENT_ID = "your-client-id-here"
+AZURE_CLIENT_SECRET = "your-client-secret-here"
 ```
 
 ## 🔒 Keamanan

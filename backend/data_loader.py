@@ -124,8 +124,8 @@ def extract_sheets(data: dict) -> dict:
                 # Clean potential string spaces in value columns before checking them
                 for col in ["Netto", "Volume", "Volume CH"]:
                     if col in df.columns:
-                        # Convert errant spaces to NaN, then 0, then float
-                        df[col] = pd.to_numeric(df[col].astype(str).str.strip().replace("", "NaN"), errors="coerce").fillna(0)
+                        # Convert errant spaces to NaN, but DO NOT fillna(0) to distinguish blank vs 0
+                        df[col] = pd.to_numeric(df[col].astype(str).str.strip().replace("", "NaN"), errors="coerce")
 
                 # Check which value column exists
                 if "Netto" in df.columns and "Volume" in df.columns:
@@ -328,10 +328,11 @@ def normalize_dataframes(sheets: dict) -> None:
             df["Hour LU"] = df["Hour LU"].apply(_clean_hour)
 
         # Force known numeric columns to be numeric
+        # We DO NOT fillna(0) here because we want to distinguish explicit 0 from blanks (NaN).
         numeric_cols = ["Volume", "Netto", "Production", "Plan_Daily", "VALUE", "Losstime", "Duration", "Rain", "Rainfall", "Minute"]
         for col in numeric_cols:
             if col in df.columns:
-                df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+                df[col] = pd.to_numeric(df[col], errors="coerce")
 
         # Convert object/time columns to string for Arrow compatibility
         for col in df.columns:

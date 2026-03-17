@@ -119,7 +119,8 @@ for df_key in ["ob_f", "ch_f", "ct_f"]:
         has_val_mask = pd.Series(False, index=df.index)
         for c in value_cols:
             if c in df.columns:
-                has_val_mask = has_val_mask | (pd.to_numeric(df[c], errors="coerce").fillna(0) > 0)
+                # Value notna() means explicitly reported (including 0)
+                has_val_mask = has_val_mask | pd.to_numeric(df[c], errors="coerce").notna()
 
         valid_df = df[has_val_mask]
         if not valid_df.empty:
