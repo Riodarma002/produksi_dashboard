@@ -281,9 +281,21 @@ def build_cumm_chart(
             bgcolor="rgba(0,0,0,0)",
             traceorder="normal",
         ),
-        margin=dict(t=110, b=45, r=45, l=50),
+        margin=dict(t=110, b=45, r=45, l=60),  # Increased left margin slightly
         font=dict(family="Rubik"),
     )
+
+    # 4) X-Axis Label (Time WITA)
+    fig.add_annotation(
+        xref="paper", yref="paper",
+        x=-0.02, y=-0.11,
+        text="<b>Time (WITA)</b>",
+        showarrow=False,
+        font=dict(size=10, color="#475569", family="Rubik"),
+        xanchor="right",
+        yanchor="top"
+    )
+
     return fig
 
 
