@@ -6,43 +6,50 @@ Columns: ['Date', 'Shift', 'Hauler', 'Loader', 'Seam', 'Product', 'Hour', 'Volum
 Target Value Columns: ['Volume']
 
 Sample raw data for 'Volume':
-0    0
-Name: Volume, dtype: int64
-DType of 'Volume': int64
+0    29.85
+1    29.60
+2    42.75
+3    40.00
+4    37.70
+5    39.70
+6    39.95
+7    38.35
+8    39.45
+9    32.65
+Name: Volume, dtype: float64
+DType of 'Volume': float64
 
 +++ RAW SHEET: Vol Hauling South +++
 Columns: ['Date', 'Hour', 'Date in', 'Time In', 'Date Out', 'Time Out', 'Hauler', 'Gross', 'Tare', 'Netto', 'Operator', 'Product', 'PIT', 'Blok', 'Seam', 'Loader', 'Material', 'Lokasi', 'ID Timbangan', 'Status', 'Kontraktor', 'SubKontraktor', 'Dumping', 'Shift', 'Hour Fix', 'Shift Fix', 'PIT Fix', 'Product Fix', 'Hour LU', 'Volume']
 Target Value Columns: ['Netto', 'Volume']
 
 Sample raw data for 'Netto':
-0    42120
-1    41380
-2    43340
-3    41480
-4    39240
-5    40560
-6    39920
-7    43720
-8    38460
-9    43420
+0    39520
+1    38860
+2    42260
+3    39960
+4    38900
+5    39900
+6    40020
+7    36900
+8    39720
+9    39680
 Name: Netto, dtype: int64
 DType of 'Netto': int64
 
 Sample raw data for 'Volume':
-0    42.12
-1    41.38
-2    43.34
-3    41.48
-4    39.24
-5    40.56
-6    39.92
-7    43.72
-8    38.46
-9    43.42
+0    39.52
+1    38.86
+2    42.26
+3    39.96
+4    38.90
+5    39.90
+6    40.02
+7    36.90
+8    39.72
+9    39.68
 Name: Volume, dtype: float64
 DType of 'Volume': float64
 
 === EXTRACT SHEETS BEHAVIOR ===
-prod_ch extracted successfully. Shape: (70, 5)
-prod_ch columns: ['Date', 'Hour LU', 'PIT Fix', 'Seam', 'Volume']
-Sum of Volume: 3005.827
+prod_ch is EMPTY after extraction
