@@ -289,7 +289,7 @@ def build_cumm_chart(
     fig.add_annotation(
         xref="paper", yref="paper",
         x=-0.02, y=-0.06,  # Raised from -0.11 to align with numbers
-        text="<b>Time (WITA)</b>",
+        text="Time (WITA)",
         showarrow=False,
         font=dict(size=10, color="#475569", family="Rubik"),
         xanchor="right",
