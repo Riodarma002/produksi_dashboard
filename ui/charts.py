@@ -69,9 +69,16 @@ def build_cumm_chart(
     else:
         plan_full[plan_cumm_col] = 0
 
-    # Last hour with data
-    has_data = hourly_full[hourly_full["Actual"] > 0]
-    last_actual_idx = has_data.index.max() if len(has_data) > 0 else -1
+    # ── FIX: Determine Last Hour Properly ──────────────────────────────── 
+    # Don't stop plotting just because production is 0. Plot up to the maximum hour we have data for.
+    if len(actual_df) > 0:
+        max_hour_recorded = actual_df["Hour LU"].max()
+        last_actual_idx = OP_HOURS.index(max_hour_recorded) if max_hour_recorded in OP_HOURS else len(OP_HOURS) - 1
+    elif len(cumm_pit) > 0:
+        max_hour_recorded = cumm_pit["Hour LU"].max()
+        last_actual_idx = OP_HOURS.index(max_hour_recorded) if max_hour_recorded in OP_HOURS else len(OP_HOURS) - 1
+    else:
+        last_actual_idx = -1
 
     # Dynamic Y-axis range calculation (Must happen before figure updates)
     all_y = []
