@@ -288,5 +288,15 @@ def inject_css():
         div[data-testid="stDecoration"] { display: none; }
         div.stDeployButton { display: none; }
         
+        /* ── Unified Plotly Chart Container ───────────────── */
+        .stPlotlyChart {
+            background: #ffffff !important;
+            border-radius: 12px !important;
+            border: 1px solid #f0f0f0 !important;
+            box-shadow: 0 2px 10px -3px rgba(0,0,0,0.02) !important;
+            padding: 8px !important;
+            margin-bottom: 0.5rem !important;
+        }
+        
     </style>
     """, unsafe_allow_html=True)
