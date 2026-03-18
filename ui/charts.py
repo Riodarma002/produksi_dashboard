@@ -191,34 +191,31 @@ def build_cumm_chart(
             {"label": "AVG RATE", "value": f"{avg_per_hour/1000:.1f}K", "sub": "MT / hr" if palette=="ch" else "BCM / hr", "color": "#1f2937"},
         ]
 
-        # Top-Left Titles (Simplified)
+        # Title — own row at top
         fig.add_annotation(
-            xref="paper", yref="paper", x=0, y=1.15,
+            xref="paper", yref="paper", x=0, y=1.22,
             text=f"<span style='font-size:16px;color:#1a1f36;font-weight:bold;'>{title}</span>",
             showarrow=False, align="left", xanchor="left", yanchor="bottom"
         )
 
-        # Add 4 column annotations (Right Side) — spaced for responsiveness
+        # Stats row — full width below title
         n_stats = len(summary_stats)
         for i, stat in enumerate(summary_stats):
-            # Evenly space stats from 0.55 to 0.98 for better mobile fit
-            x_pos = 0.55 + (i / max(n_stats - 1, 1)) * 0.43
+            x_pos = 0.02 + (i / max(n_stats - 1, 1)) * 0.96
             
-            # Header Trace Label
+            # Value + Label combined (compact: "ACTUAL  8.5K")
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.18,
-                text=f"<span style='font-size:9px;color:#64748b;font-weight:600;'>{stat['label']}</span>",
-                showarrow=False, align="center", xanchor="center", yanchor="bottom"
-            )
-            # Principal Value
-            fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.10,
-                text=f"<span style='font-size:15px;color:{stat['color']};font-weight:bold;'>{stat['value']}</span>",
+                xref="paper", yref="paper", x=x_pos, y=1.12,
+                text=(
+                    f"<span style='font-size:9px;color:#64748b;font-weight:600;'>{stat['label']}</span>"
+                    f"<br>"
+                    f"<span style='font-size:15px;color:{stat['color']};font-weight:bold;'>{stat['value']}</span>"
+                ),
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
             # Sub-label
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.02,
+                xref="paper", yref="paper", x=x_pos, y=1.04,
                 text=f"<span style='font-size:8px;color:#94a3b8;'>{stat['sub']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
@@ -287,7 +284,7 @@ def build_cumm_chart(
             bgcolor="rgba(0,0,0,0)",
             traceorder="normal",
         ),
-        margin=dict(t=100, b=40, r=35, l=50),
+        margin=dict(t=120, b=40, r=35, l=50),
         font=dict(family="Rubik"),
     )
 
