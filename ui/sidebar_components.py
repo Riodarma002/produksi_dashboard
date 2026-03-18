@@ -201,7 +201,7 @@ def render_refresh_section():
                 <span class="sync-status-icon">{sync_info['icon']}</span>
                 <span class="sync-status-text">{sync_info['message']}</span>
             </div>
-            <span class="sync-status-time">Auto-sync: 1j</span>
+            <span class="sync-status-time">Auto-sync: 1m</span>
         </div>
         """,
         unsafe_allow_html=True

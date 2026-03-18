@@ -19,8 +19,11 @@ def init_data() -> dict:
     mtime = 0
     if os.path.exists(CACHE_FILE):
         mtime = os.path.getmtime(CACHE_FILE)
-        
-    if "sheets" not in st.session_state or st.session_state.get("cache_mtime") != mtime:
+
+    had_previous_data = "sheets" in st.session_state
+    cache_changed = st.session_state.get("cache_mtime") != mtime
+
+    if not had_previous_data or cache_changed:
         data = load_data()
         
         # Check if the returned data is already the processed 'cached' dict
@@ -36,9 +39,10 @@ def init_data() -> dict:
             
         st.session_state["cache_mtime"] = mtime
         
-        # VERY IMPORTANT: If we just updated the data in the background, 
-        # force a full rerun so the UI instantly draws the new numbers without manual refresh
-        st.rerun()
+        # Only rerun if we HAD old data and the cache has been updated
+        # This prevents a blank-screen loop on first load
+        if had_previous_data and cache_changed:
+            st.rerun()
             
     return st.session_state["sheets"]
 
