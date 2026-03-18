@@ -45,6 +45,7 @@ def build_cumm_chart(
     convert_kg: bool = False,
     palette: str = "ob",
     rain_df: pd.DataFrame = None,
+    min_last_idx: int = -1,
 ) -> go.Figure:
     """Build cumulative chart with per-point labels."""
 
@@ -71,6 +72,9 @@ def build_cumm_chart(
     # Last hour explicitly reported (Actual is not NaN)
     has_data = hourly_full[hourly_full["Actual"].notna()]
     last_actual_idx = has_data.index.max() if len(has_data) > 0 else -1
+    # If a reference horizon is provided (e.g. from OB), extend our line to match
+    if min_last_idx > last_actual_idx:
+        last_actual_idx = min_last_idx
 
     # Safely fillna(0) for cumsum calculation
     hourly_full["Actual"] = hourly_full["Actual"].fillna(0)
@@ -299,11 +303,28 @@ def build_cumm_chart(
     return fig
 
 
+def _get_last_hour_idx(df, value_col: str) -> int:
+    """Get the index (in OP_HOURS) of the last hour that has reported data."""
+    if df.empty or value_col not in df.columns or "Hour LU" not in df.columns:
+        return -1
+    hourly = df.groupby("Hour LU")[value_col].sum(min_count=1).reset_index()
+    hourly.columns = ["Hour", "Val"]
+    reported = hourly[hourly["Val"].notna()]
+    if reported.empty:
+        return -1
+    # Map to OP_HOURS index
+    indices = [OP_HOURS.index(h) for h in reported["Hour"] if h in OP_HOURS]
+    return max(indices) if indices else -1
+
+
 def render_production_charts(
     ob_f, ch_f, cumm_pit, plan_ob_val: float, plan_ch_val: float, rain_f: pd.DataFrame = None
 ):
     """Render OB and CH cumulative charts side-by-side."""
     st.markdown('<div style="height:16px;"></div>', unsafe_allow_html=True)
+
+    # Compute OB's last reported hour index to sync CH's time horizon
+    ob_last_idx = _get_last_hour_idx(ob_f, "Volume")
 
     col_ob, col_ch = st.columns(2, gap="small")
 
@@ -326,7 +347,8 @@ def render_production_charts(
             ch_f, "Volume", "Cumm CH", plan_ch_val,
             "Cumulative Coal Hauling", "MT",
             cumm_pit, convert_kg=False, palette="ch",
-            rain_df=rain_f
+            rain_df=rain_f,
+            min_last_idx=ob_last_idx,
         )
         st.plotly_chart(
             fig_ch, 
