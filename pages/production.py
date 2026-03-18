@@ -44,6 +44,8 @@ if "jo_idx" not in st.session_state:
     st.session_state.jo_idx = 0
 if "jo_toggle" not in st.session_state:
     st.session_state.jo_toggle = pit_names[0] if pit_names else "N/A"
+if "jo_toggle_final_fix" not in st.session_state:
+    st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
 if "prev_auto_count" not in st.session_state:
     st.session_state.prev_auto_count = -1
 if "user_interact_time" not in st.session_state:
@@ -203,6 +205,7 @@ with col_pit:
     selected_pit_new = st.segmented_control(
         label="PIT",
         options=pit_names,
+        default=st.session_state.jo_toggle_final_fix,
         label_visibility="collapsed",
         key="jo_toggle_final_fix"
     )
