@@ -109,7 +109,7 @@ def build_cumm_chart(
             xref="paper", yref="y",
             text=f"<b>Plan: {fmt(plan_daily_val)}</b>",
             showarrow=False,
-            font=dict(size=11, color=colors["line"], family="Rubik"),
+            font=dict(size=12, color=colors["line"], family="Rubik"),
             bgcolor="rgba(255, 255, 255, 0.7)",
             xanchor="left", yanchor="bottom"
         )
@@ -144,8 +144,8 @@ def build_cumm_chart(
                 customdata=hover_texts,
                 mode="lines+markers",
                 name="Actual",
-                line=dict(color=colors["line"], width=2, shape="spline", smoothing=1.3),
-                marker=dict(size=6, color=marker_colors, line=dict(color="#fff", width=1.5)),
+                line=dict(color=colors["line"], width=2.5, shape="spline", smoothing=1.3),
+                marker=dict(size=7, color=marker_colors, line=dict(color="#fff", width=1.5)),
                 hovertemplate="Actual<br><b>%{customdata}</b><extra></extra>",
             )
         )
@@ -160,7 +160,7 @@ def build_cumm_chart(
                 text=f"<b>{val/1000:.1f}K</b>",
                 showarrow=False,
                 yshift=12,
-                font=dict(size=9, color=text_colors[idx], family="Rubik"),
+                font=dict(size=10, color=text_colors[idx], family="Rubik"),
                 opacity=0.9
             )
 
@@ -174,7 +174,7 @@ def build_cumm_chart(
                 x=[x_coords[-1]],
                 y=[last["Cumm_Actual"]],
                 mode="markers",
-                marker=dict(size=9, color=dot_color, line=dict(color="#fff", width=1.5)),
+                marker=dict(size=10, color=dot_color, line=dict(color="#fff", width=1.5)),
                 showlegend=False,
                 hoverinfo="skip",
             )
@@ -194,7 +194,7 @@ def build_cumm_chart(
         # Top-Left Titles (Simplified)
         fig.add_annotation(
             xref="paper", yref="paper", x=0, y=1.15,
-            text=f"<span style='font-size:14px;color:#1a1f36;font-weight:bold;'>{title}</span>",
+            text=f"<span style='font-size:16px;color:#1a1f36;font-weight:bold;'>{title}</span>",
             showarrow=False, align="left", xanchor="left", yanchor="bottom"
         )
 
@@ -207,19 +207,19 @@ def build_cumm_chart(
             # Header Trace Label
             fig.add_annotation(
                 xref="paper", yref="paper", x=x_pos, y=1.18,
-                text=f"<span style='font-size:8px;color:#64748b;font-weight:600;'>{stat['label']}</span>",
+                text=f"<span style='font-size:9px;color:#64748b;font-weight:600;'>{stat['label']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
             # Principal Value
             fig.add_annotation(
                 xref="paper", yref="paper", x=x_pos, y=1.10,
-                text=f"<span style='font-size:13px;color:{stat['color']};font-weight:bold;'>{stat['value']}</span>",
+                text=f"<span style='font-size:15px;color:{stat['color']};font-weight:bold;'>{stat['value']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
             # Sub-label
             fig.add_annotation(
                 xref="paper", yref="paper", x=x_pos, y=1.02,
-                text=f"<span style='font-size:7px;color:#94a3b8;'>{stat['sub']}</span>",
+                text=f"<span style='font-size:8px;color:#94a3b8;'>{stat['sub']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
 
@@ -264,12 +264,12 @@ def build_cumm_chart(
             tickmode="array", tickvals=list(range(len(OP_HOURS))), ticktext=OP_HOURS,
             range=[-0.5, len(OP_HOURS) - 0.5], showgrid=False,
             linecolor="#e5e7eb", linewidth=1,
-            tickfont=dict(size=9, color="#475569", family="Rubik"),
+            tickfont=dict(size=10, color="#475569", family="Rubik"),
         ),
         yaxis=dict(
             showgrid=True, gridcolor="#f3f4f6", gridwidth=1,
             zeroline=False, showline=False,
-            tickfont=dict(size=9, color="#9ca3af", family="Rubik"),
+            tickfont=dict(size=10, color="#9ca3af", family="Rubik"),
             # RAISED LINE: start at negative to leave room for bars (reduced gap)
             range=[-y_max * 0.25, y_max * 1.30],
             title=dict(text=y_label, font=dict(size=10, color="#64748b")),
@@ -283,7 +283,7 @@ def build_cumm_chart(
         ),
         legend=dict(
             orientation="h", y=-0.12,
-            font=dict(size=9, color="#6b7280", family="Rubik"),
+            font=dict(size=10, color="#6b7280", family="Rubik"),
             bgcolor="rgba(0,0,0,0)",
             traceorder="normal",
         ),
