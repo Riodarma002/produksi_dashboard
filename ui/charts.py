@@ -193,19 +193,19 @@ def build_cumm_chart(
 
         # Title — own row at top
         fig.add_annotation(
-            xref="paper", yref="paper", x=0, y=1.22,
+            xref="paper", yref="paper", x=0, y=1.28,
             text=f"<span style='font-size:16px;color:#1a1f36;font-weight:bold;'>{title}</span>",
             showarrow=False, align="left", xanchor="left", yanchor="bottom"
         )
 
-        # Stats row — full width below title
+        # Stats row — right side, below title
         n_stats = len(summary_stats)
         for i, stat in enumerate(summary_stats):
-            x_pos = 0.02 + (i / max(n_stats - 1, 1)) * 0.96
+            x_pos = 0.56 + (i / max(n_stats - 1, 1)) * 0.42
             
-            # Value + Label combined (compact: "ACTUAL  8.5K")
+            # Value + Label combined
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.12,
+                xref="paper", yref="paper", x=x_pos, y=1.16,
                 text=(
                     f"<span style='font-size:9px;color:#64748b;font-weight:600;'>{stat['label']}</span>"
                     f"<br>"
@@ -215,7 +215,7 @@ def build_cumm_chart(
             )
             # Sub-label
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.04,
+                xref="paper", yref="paper", x=x_pos, y=1.08,
                 text=f"<span style='font-size:8px;color:#94a3b8;'>{stat['sub']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
@@ -284,7 +284,7 @@ def build_cumm_chart(
             bgcolor="rgba(0,0,0,0)",
             traceorder="normal",
         ),
-        margin=dict(t=120, b=40, r=35, l=50),
+        margin=dict(t=145, b=40, r=35, l=50),
         font=dict(family="Rubik"),
     )
 
