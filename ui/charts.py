@@ -193,7 +193,7 @@ def build_cumm_chart(
 
         # Title — own row at top
         fig.add_annotation(
-            xref="paper", yref="paper", x=0, y=1.28,
+            xref="paper", yref="paper", x=0, y=1.20,
             text=f"<span style='font-size:16px;color:#1a1f36;font-weight:bold;'>{title}</span>",
             showarrow=False, align="left", xanchor="left", yanchor="bottom"
         )
@@ -205,7 +205,7 @@ def build_cumm_chart(
             
             # Value + Label combined
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.16,
+                xref="paper", yref="paper", x=x_pos, y=1.12,
                 text=(
                     f"<span style='font-size:9px;color:#64748b;font-weight:600;'>{stat['label']}</span>"
                     f"<br>"
@@ -215,7 +215,7 @@ def build_cumm_chart(
             )
             # Sub-label
             fig.add_annotation(
-                xref="paper", yref="paper", x=x_pos, y=1.08,
+                xref="paper", yref="paper", x=x_pos, y=1.04,
                 text=f"<span style='font-size:8px;color:#94a3b8;'>{stat['sub']}</span>",
                 showarrow=False, align="center", xanchor="center", yanchor="bottom"
             )
@@ -253,7 +253,7 @@ def build_cumm_chart(
             )
 
     fig.update_layout(
-        height=380,
+        height=420,  # Restored height to give breathing room for rainfall bars below
         autosize=True,
         plot_bgcolor="rgba(0,0,0,0)",
         paper_bgcolor="rgba(0,0,0,0)",
@@ -284,7 +284,7 @@ def build_cumm_chart(
             bgcolor="rgba(0,0,0,0)",
             traceorder="normal",
         ),
-        margin=dict(t=145, b=40, r=35, l=50),
+        margin=dict(t=110, b=40, r=35, l=50),
         font=dict(family="Rubik"),
     )
 
