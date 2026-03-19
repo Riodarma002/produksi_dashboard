@@ -55,7 +55,7 @@ if "auto_play" not in st.session_state:
 
 # ── Auto-refresh timer (invisible, triggers every 25s) ────────
 curr_interval = ROTATE_INTERVAL_MS if st.session_state.auto_play else 9999999
-auto_count = st_autorefresh(interval=curr_interval, key="auto_rotate")
+auto_count = st_autorefresh(interval=curr_interval, limit=9999999, key="auto_rotate")
 
 # Detect: was this rerun triggered by the auto-refresh timer?
 is_auto = auto_count != st.session_state.prev_auto_count

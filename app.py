@@ -21,7 +21,7 @@ sync_manager.start_sync()
 
 # Auto-refresh the entire application every 1 hour (3600000 ms) 
 # to fetch the latest background sync data without manual refresh.
-st_autorefresh(interval=3600000, key="global_hourly_refresh")
+st_autorefresh(interval=3600000, limit=9999999, key="global_hourly_refresh")
 
 inject_theme()
 
