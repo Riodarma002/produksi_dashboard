@@ -109,7 +109,7 @@ def inject_theme():
         padding-left: 2rem !important;
         padding-right: 2rem !important;
         max-width: 100% !important;
-        margin-top: 0 !important;
+        margin-top: -1rem !important; /* Pull content up closer to arrow */
     }
 
     /* ── Hide default Streamlit chrome ────────────────── */
