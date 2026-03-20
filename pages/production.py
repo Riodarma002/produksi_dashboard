@@ -37,7 +37,8 @@ sheets = init_data()
 input_values = get_input_values()
 
 pit_names = list(PIT_REGISTRY.keys())
-ROTATE_INTERVAL_MS = 25_000  # 25 seconds
+ROTATE_INTERVAL_MS = 25_000   # 25 seconds
+ROTATE_SECONDS     = 25       # same, for timestamp comparison
 
 # ── Session state init ────────────────────────────────────────
 if "jo_idx" not in st.session_state:
@@ -46,27 +47,34 @@ if "jo_toggle" not in st.session_state:
     st.session_state.jo_toggle = pit_names[0] if pit_names else "N/A"
 if "jo_toggle_final_fix" not in st.session_state:
     st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
-if "prev_auto_count" not in st.session_state:
-    st.session_state.prev_auto_count = -1
 if "user_interact_time" not in st.session_state:
     st.session_state.user_interact_time = 0.0
 if "auto_play" not in st.session_state:
     st.session_state.auto_play = True
+if "last_slide_time" not in st.session_state:
+    st.session_state.last_slide_time = time.time()
 
 # ── Auto-refresh timer (invisible, triggers every 25s) ────────
+# This just causes Streamlit to rerun periodically;
+# the actual slide decision is timestamp-based below.
 curr_interval = ROTATE_INTERVAL_MS if st.session_state.auto_play else 9999999
-auto_count = st_autorefresh(interval=curr_interval, limit=9999999, key="auto_rotate")
+st_autorefresh(interval=curr_interval, limit=9999999, key="auto_rotate")
 
-# Detect: was this rerun triggered by the auto-refresh timer?
-is_auto = auto_count != st.session_state.prev_auto_count
-st.session_state.prev_auto_count = auto_count
+# ── Timestamp-based auto-slide (robust against st.rerun interference) ──
+now = time.time()
+elapsed = now - st.session_state.last_slide_time
+should_slide = (
+    st.session_state.auto_play
+    and len(pit_names) > 0
+    and elapsed >= ROTATE_SECONDS
+)
 
-# If auto-refresh AND we are not on the very first render tick (auto_count > 0)
-if is_auto and auto_count > 0 and st.session_state.auto_play and len(pit_names) > 0:
+if should_slide:
     st.session_state.jo_idx = (st.session_state.jo_idx + 1) % len(pit_names)
     st.session_state.jo_toggle = pit_names[st.session_state.jo_idx]
     st.session_state.jo_toggle_final_fix = st.session_state.jo_toggle
-    logger.debug(f"Auto-rotated to PIT: {st.session_state.jo_toggle}")
+    st.session_state.last_slide_time = now
+    logger.info(f"Auto-rotated to PIT: {st.session_state.jo_toggle} (elapsed {elapsed:.1f}s)")
 
 # ── Header Updates & Logic ──────────────────────────
 # 1. State & Date Range Initialization
@@ -205,7 +213,6 @@ with col_pit:
     selected_pit_new = st.segmented_control(
         label="PIT",
         options=pit_names,
-        default=st.session_state.jo_toggle_final_fix,
         label_visibility="collapsed",
         key="jo_toggle_final_fix"
     )
@@ -225,11 +232,13 @@ if selected_pit_new and selected_pit_new != selected_pit:
     st.session_state.jo_idx = pit_names.index(selected_pit_new)
     st.session_state.jo_toggle = selected_pit_new
     st.session_state.user_interact_time = time.time()
+    st.session_state.last_slide_time = time.time()  # Reset slide timer
     logger.info(f"User switched to PIT: {selected_pit_new}")
     st.rerun()
 
 if play_pause:
     st.session_state.auto_play = not st.session_state.auto_play
+    st.session_state.last_slide_time = time.time()  # Reset slide timer
     status = "PLAY" if st.session_state.auto_play else "PAUSE"
     logger.info(f"User clicked {status} button")
     st.rerun()
