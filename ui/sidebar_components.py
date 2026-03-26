@@ -191,7 +191,7 @@ def render_refresh_section():
                             del st.session_state["prod_date"]
 
                         # Clear any Streamlit cached functions related to data loading
-                        st.cache_data_clear()
+                        st.cache_data.clear()
 
                         # Success message
                         if not sheets["prod_ob"].empty:
