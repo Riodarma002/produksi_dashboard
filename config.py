@@ -67,8 +67,8 @@ validate_environment()
 # ── OneDrive Links ────────────────────────────────────────────
 # Updated 2026-03-15: New db_hourly_report file with different structure
 ONEDRIVE_LINKS = {
-    "db_hourly": "https://mgeid-my.sharepoint.com/:x:/g/personal/planning_department_mgeid_onmicrosoft_com/IQCcW88khWRCTZFZE9PnZxdkAdVZbA3srdgAZbYUWf4lxNY?e=gABCsf",
-    "plan_hourly": "https://mgeid-my.sharepoint.com/:x:/g/personal/planning_department_mgeid_onmicrosoft_com/IQBK3837O3nsR5AKLRsno8PGARDeJ9RzlLfjVdPLJLPykWk?e=wYAkLX",
+    "db_hourly": "https://mgeid-my.sharepoint.com/:x:/r/personal/planning_department_mgeid_onmicrosoft_com/Documents/Dashboard_all/db%20Production%20Hourly%20(final).xlsx?d=w24cf5b9c64854d42915913d3e7671764&csf=1&web=1&e=bKZhbL",
+    "plan_hourly": "https://mgeid-my.sharepoint.com/:x:/g/personal/planning_department_mgeid_onmicrosoft_com/IQBK3837O3nsR5AKLRsno8PGARKNx5EqiQV3IbnLXQayihk?e=BxFbTc",
 }
 
 # ── Cache Settings ────────────────────────────────────────────

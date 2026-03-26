@@ -16,10 +16,38 @@ logger = logging.getLogger(__name__)
 
 
 # Removed show_spinner and @st.cache_data to ensure latest .pkl is ALWAYS read on new sessions or refresh.
-def load_data() -> dict:
-    """Read data from local cache if available, otherwise fetch synchronously."""
-    # 1. Try to read from local cache file
-    if os.path.exists(CACHE_FILE):
+def load_data(force_refresh: bool = False) -> dict:
+    """
+    Read data from local cache if available, otherwise fetch synchronously.
+
+    Args:
+        force_refresh: If True, bypass cache and fetch fresh data from OneDrive
+
+    Returns:
+        dict with cached or fresh data
+    """
+    import time
+    from datetime import datetime
+
+    # 1. Check if cache exists and is fresh enough
+    cache_is_fresh = False
+    if os.path.exists(CACHE_FILE) and not force_refresh:
+        try:
+            cache_mtime = os.path.getmtime(CACHE_FILE)
+            cache_age = time.time() - cache_mtime
+            # Cache is considered fresh if it's less than 2x SYNC_INTERVAL old
+            # This gives some tolerance for background sync delays
+            cache_is_fresh = cache_age < (CACHE_TTL_SECONDS * 2)
+
+            if cache_is_fresh:
+                logger.info(f"Using fresh cache (age: {int(cache_age)}s)")
+            else:
+                logger.warning(f"Cache is stale (age: {int(cache_age/60)}m), triggering refresh")
+        except Exception as e:
+            logger.error(f"Failed to check cache age: {e}")
+
+    # 2. Try to read from local cache file if fresh
+    if os.path.exists(CACHE_FILE) and cache_is_fresh and not force_refresh:
         try:
             with open(CACHE_FILE, "rb") as f:
                 cached = pickle.load(f)
@@ -31,7 +59,8 @@ def load_data() -> dict:
         except Exception as e:
             logger.error(f"Failed to read cache file: {e}")
 
-    # 2. Fallback to synchronous fetch (first run or cache missing)
+    # 3. Fallback to synchronous fetch (first run, cache missing, or force refresh)
+    logger.info("Fetching fresh data from OneDrive...")
     result = {}
     for name, url in ONEDRIVE_LINKS.items():
         if AZURE_CLIENT_SECRET:
@@ -44,11 +73,22 @@ def load_data() -> dict:
                 pass
 
         dl = url.split("?")[0] + "?download=1"
-        r = requests.get(dl, timeout=30, allow_redirects=True,
-                         headers={"User-Agent": "Mozilla/5.0"})
-        result[name] = pd.read_excel(
-            io.BytesIO(r.content), sheet_name=None, engine="openpyxl"
-        )
+        try:
+            r = requests.get(dl, timeout=30, allow_redirects=True,
+                             headers={"User-Agent": "Mozilla/5.0"})
+            r.raise_for_status()
+            
+            # CRITICAL: Validate that we actually got an Excel/ZIP file
+            if not r.content.startswith(b'PK'):
+                logger.error(f"Fallback download for {name} failed: Not a valid Excel file. (Status: {r.status_code})")
+                continue
+                
+            result[name] = pd.read_excel(
+                io.BytesIO(r.content), sheet_name=None, engine="openpyxl"
+            )
+        except Exception as e:
+            logger.error(f"Fallback download for {name} failed: {e}")
+            continue
     return result
 
 

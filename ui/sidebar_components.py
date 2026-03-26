@@ -160,34 +160,47 @@ def render_refresh_section():
     if st.button("🔄 Refresh Data", key="refresh_btn", use_container_width=True):
         with st.spinner("🔄 Mengambil data terbaru..."):
             try:
-                # Trigger sync
-                data = load_data()
+                # CRITICAL FIX: Force fresh fetch by triggering immediate sync
+                # This bypasses the old cache and fetches directly from OneDrive
+                sync_result = sync_manager.trigger_immediate_sync()
 
-                if not data:
-                    st.error("❌ Gagal mengambil data")
+                if not sync_result["success"]:
+                    st.error(f"❌ {sync_result['message']}")
                 else:
-                    if isinstance(data, dict) and "sheets" in data:
-                        sheets = data["sheets"]
-                        input_values = data["input_values"]
+                    # Load the freshly cached data
+                    data = load_data()
+
+                    if not data:
+                        st.error("❌ Gagal mengambil data dari cache")
                     else:
-                        sheets = extract_sheets(data)
-                        normalize_dataframes(sheets)
-                        input_values = parse_input_plan(sheets["input_plan"])
+                        if isinstance(data, dict) and "sheets" in data:
+                            sheets = data["sheets"]
+                            input_values = data["input_values"]
+                        else:
+                            sheets = extract_sheets(data)
+                            normalize_dataframes(sheets)
+                            input_values = parse_input_plan(sheets["input_plan"])
 
-                    # Update session state
-                    st.session_state["sheets"] = sheets
-                    st.session_state["input_values"] = input_values
-                    st.session_state["cache_mtime"] = os.path.getmtime(CACHE_FILE)
+                        # Update session state
+                        st.session_state["sheets"] = sheets
+                        st.session_state["input_values"] = input_values
+                        st.session_state["cache_mtime"] = os.path.getmtime(CACHE_FILE)
 
-                    # CRITICAL FIX: Clear prod_date from session state to force re-read latest date
-                    if "prod_date" in st.session_state:
-                        del st.session_state["prod_date"]
+                        # CRITICAL FIX: Clear prod_date from session state to force re-read latest date
+                        if "prod_date" in st.session_state:
+                            del st.session_state["prod_date"]
 
-                    # Success message
-                    latest_date = sheets["prod_ob"]["Date"].max().date()
-                    st.success(f"✅ Data berhasil diupdate! Tanggal terbaru: {latest_date}")
-                    time.sleep(1)
-                    st.rerun()
+                        # Clear any Streamlit cached functions related to data loading
+                        st.cache_data_clear()
+
+                        # Success message
+                        if not sheets["prod_ob"].empty:
+                            latest_date = sheets["prod_ob"]["Date"].max().date()
+                            st.success(f"✅ Data berhasil diupdate! Tanggal terbaru: {latest_date}")
+                        else:
+                            st.success("✅ Data berhasil diupdate!")
+                        time.sleep(1)
+                        st.rerun()
 
             except Exception as e:
                 st.error(f"❌ Error: {str(e)}")
@@ -201,7 +214,7 @@ def render_refresh_section():
                 <span class="sync-status-icon">{sync_info['icon']}</span>
                 <span class="sync-status-text">{sync_info['message']}</span>
             </div>
-            <span class="sync-status-time">Auto-sync: 1m</span>
+            <span class="sync-status-time">Interval: 1m | Refresh: 5m</span>
         </div>
         """,
         unsafe_allow_html=True

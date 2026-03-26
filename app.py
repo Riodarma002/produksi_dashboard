@@ -19,9 +19,9 @@ from streamlit_autorefresh import st_autorefresh
 # Start background sync thread (runs behind visual)
 sync_manager.start_sync()
 
-# Auto-refresh the entire application every 1 hour (3600000 ms) 
+# Auto-refresh the entire application every 5 minutes (300000 ms)
 # to fetch the latest background sync data without manual refresh.
-st_autorefresh(interval=3600000, limit=9999999, key="global_hourly_refresh")
+st_autorefresh(interval=300000, limit=9999999, key="global_refresh")
 
 inject_theme()
 
@@ -205,7 +205,7 @@ with st.sidebar:
                 font-size: 10px;
                 color: #075985;
                 line-height: 1.4;
-            ">Data auto-sync setiap 1 jam. Klik refresh untuk update segera.</div>
+            ">Data auto-sync setiap 1 menit. Auto-refresh setiap 5 menit. Klik refresh untuk update segera.</div>
         </div>
         """,
         unsafe_allow_html=True

@@ -140,6 +140,9 @@ class SyncManager:
 
     def _sync_worker(self):
         """Infinite loop to fetch data periodically."""
+        consecutive_failures = 0
+        max_consecutive_failures = 5
+
         while True:
             try:
                 self._is_syncing = True
@@ -147,12 +150,29 @@ class SyncManager:
                 self._last_sync_status = result
                 self._is_syncing = False
 
-                if not result["success"]:
-                    logger.warning(f"Background sync failed: {result['message']}")
+                if result["success"]:
+                    consecutive_failures = 0
+                    logger.info(f"Background sync completed: {result['message']}")
+                else:
+                    consecutive_failures += 1
+                    logger.warning(f"Background sync failed ({consecutive_failures}/{max_consecutive_failures}): {result['message']}")
+
+                    # If too many consecutive failures, increase wait time to avoid spam
+                    if consecutive_failures >= max_consecutive_failures:
+                        logger.error(f"Too many consecutive failures ({consecutive_failures}), waiting 5 minutes before retry")
+                        time.sleep(300)  # Wait 5 minutes
+                        consecutive_failures = 0  # Reset counter after long wait
 
             except Exception as e:
-                logger.error(f"Error in background sync worker: {e}", exc_info=True)
+                consecutive_failures += 1
+                logger.error(f"Error in background sync worker ({consecutive_failures}/{max_consecutive_failures}): {e}", exc_info=True)
                 self._is_syncing = False
+
+                # If too many consecutive failures, increase wait time
+                if consecutive_failures >= max_consecutive_failures:
+                    logger.error(f"Too many consecutive exceptions ({consecutive_failures}), waiting 5 minutes before retry")
+                    time.sleep(300)  # Wait 5 minutes
+                    consecutive_failures = 0  # Reset counter after long wait
 
             # Wait for the next interval
             time.sleep(SYNC_INTERVAL)
@@ -168,25 +188,69 @@ class SyncManager:
         result = {}
         for name, url in ONEDRIVE_LINKS.items():
             try:
-                # Try Azure API
+                # Try Azure API first
                 if AZURE_CLIENT_SECRET:
-                    sheets = download_excel_from_graph(url)
-                    if sheets:
-                        result[name] = sheets
-                        continue
+                    try:
+                        logger.info(f"Attempting Azure Graph API download for {name}...")
+                        sheets = download_excel_from_graph(url)
+                        if sheets:
+                            result[name] = sheets
+                            logger.info(f"✅ Successfully downloaded {name} via Azure Graph API")
+                            continue
+                        else:
+                            logger.warning(f"Azure Graph API returned None for {name}")
+                    except Exception as azure_err:
+                        logger.warning(f"Azure Graph API failed for {name}: {azure_err}")
 
                 # Fallback to direct download
+                logger.info(f"Attempting direct download for {name}...")
                 dl = url.split("?")[0] + "?download=1"
                 r = requests.get(dl, timeout=60, allow_redirects=True,
                                  headers={"User-Agent": "Mozilla/5.0"})
+
+                # Log response info for debugging
+                logger.info(f"Response status: {r.status_code}")
+                logger.info(f"Response content-type: {r.headers.get('content-type', 'unknown')}")
+                logger.info(f"Response size: {len(r.content)} bytes")
+
+                # Check if we got HTML instead of Excel file
+                content_type = r.headers.get('content-type', '').lower()
+                if 'text/html' in content_type or b'<html' in r.content[:100]:
+                    logger.error(f"Got HTML page instead of Excel file for {name}")
+                    logger.error(f"First 200 chars: {r.content[:200]}")
+                    raise Exception(f"Download returned HTML page instead of Excel file. Check if OneDrive link requires authentication.")
+
                 r.raise_for_status()
-                result[name] = pd.read_excel(
-                    io.BytesIO(r.content), sheet_name=None, engine="openpyxl"
-                )
+
+                # Validate that we got a valid Excel file by checking magic bytes
+                # Excel files (XLSX) are ZIP files starting with PK
+                if len(r.content) < 4 or r.content[:2] != b'PK':
+                    logger.error(f"Downloaded content for {name} is not a valid Excel/ZIP file")
+                    logger.error(f"First 20 bytes (hex): {r.content[:20].hex()}")
+                    raise Exception(f"Downloaded file is not a valid Excel format")
+
+                # Try to parse the Excel file
+                try:
+                    result[name] = pd.read_excel(
+                        io.BytesIO(r.content), sheet_name=None, engine="openpyxl"
+                    )
+                    logger.info(f"✅ Successfully downloaded and parsed {name} via direct download")
+                except Exception as parse_err:
+                    logger.error(f"Failed to parse Excel file for {name}: {parse_err}")
+                    raise
+
             except Exception as e:
                 logger.error(f"Failed to fetch {name}: {e}")
-        
-        return result if len(result) == len(ONEDRIVE_LINKS) else None
+                import traceback
+                logger.error(f"Full traceback:\n{traceback.format_exc()}")
+
+        # Only return result if we successfully fetched all files
+        if len(result) == len(ONEDRIVE_LINKS):
+            logger.info(f"✅ Successfully fetched all {len(result)} files")
+            return result
+        else:
+            logger.error(f"Only fetched {len(result)}/{len(ONEDRIVE_LINKS)} files")
+            return None
 
 # Singleton accessor
 sync_manager = SyncManager()
