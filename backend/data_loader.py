@@ -113,8 +113,12 @@ def extract_sheets(data: dict) -> dict:
         return data["sheets"]
 
     # Otherwise, extract from raw Excel data
-    db_hourly = data["db_hourly"]
-    plan_hourly = data["plan_hourly"]
+    db_hourly = data.get("db_hourly")
+    plan_hourly = data.get("plan_hourly")
+
+    if db_hourly is None or plan_hourly is None:
+        logger.error(f"Missing required data for extraction: db_hourly={db_hourly is not None}, plan_hourly={plan_hourly is not None}")
+        raise KeyError(f"Data loading failed: Incomplete data received from OneDrive. Please check your sharing links.")
 
     # Detect file format by checking sheet names
     sheet_names = db_hourly.keys()
